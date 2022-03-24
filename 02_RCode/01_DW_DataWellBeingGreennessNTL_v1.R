@@ -29,7 +29,8 @@ extractBufferDataFromRaster <- function(RasterFolder, filelist, cityLocationSpat
     if(flip_reverse){
       test_tiff <- flip(test_tiff, direction = 'y')
     }
-    crs(test_tiff) <- proj
+    cat(filename)
+    #crs(test_tiff) <- proj
     Year <- str_sub(filename, year_start_location, year_end_location) %>% as.numeric()
     Month <- str_sub(filename, month_start_location, month_end_location) %>% as.numeric()
     
