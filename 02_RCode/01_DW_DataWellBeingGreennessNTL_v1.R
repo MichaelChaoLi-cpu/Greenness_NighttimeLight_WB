@@ -175,7 +175,7 @@ data_pool <- data_pool %>% drop_na(gender) %>%
                                                                                                 ifelse(income == 12, 25,
                                                                                                        ifelse(income == 13, 30, NA)))))))))))))
   )
-
+save(data_ext, file = "01_Data/01_data_ext.RData")
 
 # get NTL data mean value
 spatial.post.id.buffer <- rgeos::gBuffer(spatial.post.id, byid = T, width = 0.05)
@@ -190,3 +190,4 @@ for (name in filelist){
 NTLRasterDataset <- 
   extractBufferDataFromRaster(NTLRasterFolder, filelist.tif, spatial.post.id.buffer,
                              11, 15, F, "NTL")
+save(NTLRasterDataset, file = "01_Data/02_NTLRasterDataset.RData")
