@@ -30,6 +30,7 @@ extractBufferDataFromRaster <- function(RasterFolder, filelist, cityLocationSpat
       test_tiff <- flip(test_tiff, direction = 'y')
     }
     cat(filename)
+    cat("\n")
     #crs(test_tiff) <- proj
     Year <- str_sub(filename, year_start_location, year_end_location) %>% as.numeric()
     Month <- str_sub(filename, month_start_location, month_end_location) %>% as.numeric()
@@ -191,3 +192,15 @@ NTLRasterDataset <-
   extractBufferDataFromRaster(NTLRasterFolder, filelist.tif, spatial.post.id.buffer,
                              11, 15, F, "NTL")
 save(NTLRasterDataset, file = "01_Data/02_NTLRasterDataset.RData")
+
+NDVIRasterFolder <- "F:/15_Article/02_RasterData/NDVI/VI_16Days_500m_v6/NDVI/"
+filelist <- list.files(NDVIRasterFolder)
+filelist.tif <- c()
+for (name in filelist){
+  if(name %>% stringr::str_sub(-3, -1) == "tif"){
+    filelist.tif <- append(filelist.tif, name)
+  }
+}
+NDVIRasterDataset <- 
+  extractBufferDataFromRaster(NDVIRasterFolder, filelist.tif, spatial.post.id.buffer,
+                              14, 19, F, "NDVI", month_end_location = 21)
