@@ -1,5 +1,7 @@
 # Author: M.L.
 
+
+
 # end
 
 library(tidyverse)
@@ -132,6 +134,7 @@ spatial.post.id <- readOGR(dsn = 'F:/15_Article/01_RawData', layer = "point_with
 proj <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
 location.dataset <- spatial.post.id@data
 location.dataset <- location.dataset %>% rename(post = post_code)
+save(spatial.post.id, file = "01_Data/05_spatial.post.id.RData")
 
 #append the dataset: 3 years to 1 years
 data_pool <- rbind(survey_2015, survey_2016)
@@ -176,7 +179,8 @@ data_pool <- data_pool %>% drop_na(gender) %>%
                                                                                                 ifelse(income == 12, 25,
                                                                                                        ifelse(income == 13, 30, NA)))))))))))))
   )
-save(data_ext, file = "01_Data/01_data_ext.RData")
+data_pool <- data_pool %>% rename(post_code = post)
+save(data_pool, file = "01_Data/01_data_pool.RData")
 
 # get NTL data mean value
 spatial.post.id.buffer <- rgeos::gBuffer(spatial.post.id, byid = T, width = 0.05)
@@ -226,3 +230,7 @@ NDVIRasterDataset_ag <- aggregate(NDVIRasterDataset$NDVI,
 colnames(NDVIRasterDataset_ag) <- c("post_code", "year", "NDVI")
 NDVIRasterDataset_ag$NDVI <- NDVIRasterDataset_ag$NDVI / 10000 * 100  #convert into from 100% to -100% 
 save(NDVIRasterDataset_ag, file = "01_Data/03_NDVIRasterDataset_ag.RData")
+
+dataset_used <- left_join(data_pool, NDVIRasterDataset_ag, by = c("post_code", "year"))
+dataset_used <- left_join(dataset_used, NTLRasterDataset_ag, by = c("post_code", "year"))
+save(dataset_used, file = "01_Data/04_dataset_used.RData")
