@@ -192,6 +192,14 @@ NTLRasterDataset <-
   extractBufferDataFromRaster(NTLRasterFolder, filelist.tif, spatial.post.id.buffer,
                              11, 15, F, "NTL")
 save(NTLRasterDataset, file = "01_Data/02_NTLRasterDataset.RData")
+NTLRasterDataset_ag <- aggregate(NTLRasterDataset$NTL,
+                                  by = list(NTLRasterDataset$post_code, 
+                                            NTLRasterDataset$year
+                                  ), 
+                                  FUN = "mean", na.rm = T
+)
+colnames(NTLRasterDataset_ag) <- c("post_code", "year", "NTL")
+save(NTLRasterDataset_ag, file = "01_Data/02_NTLRasterDataset_ag.RData")
 
 NDVIRasterFolder <- "F:/15_Article/02_RasterData/NDVI/VI_16Days_500m_v6/NDVI/"
 filelist <- list.files(NDVIRasterFolder)
@@ -204,3 +212,17 @@ for (name in filelist){
 NDVIRasterDataset <- 
   extractBufferDataFromRaster(NDVIRasterFolder, filelist.tif, spatial.post.id.buffer,
                               14, 19, F, "NDVI", month_end_location = 21)
+save(NDVIRasterDataset, file = "01_Data/03_NDVIRasterDataset.RData")
+NDVIRasterDataset$date <- 
+  as.Date((NDVIRasterDataset$month - 1),
+          origin = paste0(NDVIRasterDataset$year,"-01-01")) %>% as.character()
+NDVIRasterDataset$month <- str_sub(NDVIRasterDataset$date, 6, 7) %>% as.numeric()
+NDVIRasterDataset_ag <- aggregate(NDVIRasterDataset$NDVI,
+                               by = list(NDVIRasterDataset$post_code, 
+                                         NDVIRasterDataset$year
+                                         ), 
+                               FUN = "mean", na.rm = T
+)
+colnames(NDVIRasterDataset_ag) <- c("post_code", "year", "NDVI")
+NDVIRasterDataset_ag$NDVI <- NDVIRasterDataset_ag$NDVI / 10000 * 100  #convert into from 100% to -100% 
+save(NDVIRasterDataset_ag, file = "01_Data/03_NDVIRasterDataset_ag.RData")
