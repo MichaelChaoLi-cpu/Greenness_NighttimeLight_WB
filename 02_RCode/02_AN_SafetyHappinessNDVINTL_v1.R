@@ -7,6 +7,8 @@
 library(tidyverse)
 library("dplyr")
 library(plm)
+library(MASS)
+library(erer)
 
 load("01_Data/04_dataset_used.RData")
 
@@ -20,6 +22,8 @@ dataset_used$age2 <- dataset_used$age * dataset_used$age
 
 pdata <- pdata.frame(dataset_used, index = c("ID", "year"))
 
+
+#### This is based on OLS
 ### safety
 formula_safe <- live_environment_satefy ~ female + age + age2 + self_reported_health +
   income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
@@ -71,8 +75,6 @@ summary(ols_low_stress)
 rem_low_stress <- plm(formula = formula_low_stress, pdata, effect = "individual", model = "random")
 summary(rem_low_stress)
 
-
-
 formula_ha <- overall_happiness ~ live_environment_satefy + 
   good_for_living + community_attachment + high_stress + low_stress +
   female + age + age2 + self_reported_health + income_indiv + college_no_diploma +
@@ -84,3 +86,31 @@ summary(ols_ha)
 rem_ha <- plm(formula = formula_ha, pdata, effect = "individual", model = "random")
 summary(rem_ha)
 
+#### OLS
+
+#### logit 
+dataset_used$female <- dataset_used$female %>% as.factor()
+dataset_used$self_reported_health <- dataset_used$self_reported_health %>% as.factor()
+dataset_used$college_no_diploma <- dataset_used$college_no_diploma %>% as.factor()
+dataset_used$bachelor <- dataset_used$bachelor %>% as.factor()
+dataset_used$master <- dataset_used$master %>% as.factor()
+dataset_used$phd <- 
+
+dataset_used$live_environment_satefy_factor <- dataset_used$live_environment_satefy %>% as.factor()
+
+formula_safe <- live_environment_satefy_factor ~ female + age +  self_reported_health +
+  income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
+glm_safe <- polr(formula = formula_safe, data = dataset_used, Hess = T)
+summary(glm_safe)
+
+ocME(glm_safe)
+
+dataset_used$overall_happiness <- dataset_used$overall_happiness %>% as.factor()
+formula_ha <- overall_happiness ~ live_environment_satefy + 
+  good_for_living + community_attachment + high_stress + low_stress +
+  female + age + self_reported_health + income_indiv + college_no_diploma +
+  bachelor + master + phd +  NDVI + NTL
+glm_ha <- polr(formula = formula_ha, data = dataset_used, Hess = T)
+summary(glm_ha)
+
+ocME(glm_ha, digits = 5)
