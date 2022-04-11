@@ -94,8 +94,9 @@ dataset_used$self_reported_health <- dataset_used$self_reported_health %>% as.fa
 dataset_used$college_no_diploma <- dataset_used$college_no_diploma %>% as.factor()
 dataset_used$bachelor <- dataset_used$bachelor %>% as.factor()
 dataset_used$master <- dataset_used$master %>% as.factor()
-dataset_used$phd <- 
+dataset_used$phd <- dataset_used$phd %>% as.factor()
 
+### live_environment_satefy
 dataset_used$live_environment_satefy_factor <- dataset_used$live_environment_satefy %>% as.factor()
 
 formula_safe <- live_environment_satefy_factor ~ female + age +  self_reported_health +
@@ -104,6 +105,17 @@ glm_safe <- polr(formula = formula_safe, data = dataset_used, Hess = T)
 summary(glm_safe)
 
 ocME(glm_safe)
+
+### good for living
+dataset_used$good_for_living_factor <- dataset_used$good_for_living %>% as.factor()
+
+formula_goodLiving <- good_for_living_factor ~ female + age + self_reported_health +
+  income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
+glm_goodLiving <- polr(formula = formula_goodLiving, data = dataset_used, Hess = T)
+summary(glm_goodLiving)
+
+ocME(glm_goodLiving)
+
 
 dataset_used$overall_happiness <- dataset_used$overall_happiness %>% as.factor()
 formula_ha <- overall_happiness ~ live_environment_satefy + 
