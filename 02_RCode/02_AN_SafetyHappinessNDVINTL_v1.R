@@ -104,7 +104,7 @@ formula_safe <- live_environment_satefy_factor ~ female + age +  self_reported_h
 glm_safe <- polr(formula = formula_safe, data = dataset_used, Hess = T)
 summary(glm_safe)
 
-ocME(glm_safe)
+ocME(glm_safe, digits = 5)
 
 ### good for living
 dataset_used$good_for_living_factor <- dataset_used$good_for_living %>% as.factor()
@@ -114,15 +114,60 @@ formula_goodLiving <- good_for_living_factor ~ female + age + self_reported_heal
 glm_goodLiving <- polr(formula = formula_goodLiving, data = dataset_used, Hess = T)
 summary(glm_goodLiving)
 
-ocME(glm_goodLiving)
+ocME(glm_goodLiving, digits = 5)
 
+### community attachment
+dataset_used$community_attachment_factor <- dataset_used$community_attachment %>% as.factor()
 
+formula_CommAttach <- community_attachment_factor ~ female + age + self_reported_health +
+  income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
+glm_CommAttach <- polr(formula = formula_CommAttach, data = dataset_used, Hess = T)
+summary(glm_CommAttach)
+
+ocME(glm_CommAttach, digits = 5)
+
+### high stress
+dataset_used$high_stress_factor <- dataset_used$high_stress %>% as.factor()
+
+formula_high_stress <- high_stress_factor ~ female + age + self_reported_health +
+  income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
+glm_high_stress <- polr(formula = formula_high_stress, data = dataset_used, Hess = T)
+summary(glm_high_stress)
+
+ocME(glm_high_stress, digits = 5)
+
+### low stress
+dataset_used$low_stress_factor <- dataset_used$low_stress %>% as.factor()
+
+formula_low_stress <- low_stress_factor ~ female + age + self_reported_health +
+  income_indiv + college_no_diploma + bachelor + master + phd  + NTL_log + NDVI
+glm_low_stress <- polr(formula = formula_low_stress, data = dataset_used, Hess = T)
+summary(glm_low_stress)
+
+ocME(glm_low_stress, digits = 5)
+
+### happiness 
 dataset_used$overall_happiness <- dataset_used$overall_happiness %>% as.factor()
-formula_ha <- overall_happiness ~ live_environment_satefy + 
-  good_for_living + community_attachment + high_stress + low_stress +
+
+formula_ha <- overall_happiness ~ live_environment_satefy_factor + 
+  good_for_living_factor + community_attachment_factor + high_stress_factor +
+  low_stress_factor +
   female + age + self_reported_health + income_indiv + college_no_diploma +
   bachelor + master + phd +  NDVI + NTL
 glm_ha <- polr(formula = formula_ha, data = dataset_used, Hess = T)
 summary(glm_ha)
 
 ocME(glm_ha, digits = 5)
+
+### overall_LS
+dataset_used$overall_LS <- dataset_used$overall_LS %>% as.factor()
+
+formula_LS <- overall_LS ~ live_environment_satefy_factor + 
+  good_for_living_factor + community_attachment_factor + high_stress_factor +
+  low_stress_factor +
+  female + age + self_reported_health + income_indiv + college_no_diploma +
+  bachelor + master + phd +  NDVI + NTL
+glm_LS <- polr(formula = formula_LS, data = dataset_used, Hess = T)
+summary(glm_LS)
+
+ocME(glm_LS, digits = 5)
