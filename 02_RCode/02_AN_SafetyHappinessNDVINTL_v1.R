@@ -1,7 +1,5 @@
 # Author: M.L.
 
-
-
 # end
 
 library(tidyverse)
@@ -166,7 +164,7 @@ formula_LS <- overall_LS ~ live_environment_satefy_factor +
   good_for_living_factor + community_attachment_factor + high_stress_factor +
   low_stress_factor +
   female + age + self_reported_health + income_indiv + college_no_diploma +
-  bachelor + master + phd +  NDVI + NTL
+  bachelor + master + phd +  NDVI + NTL_log
 glm_LS <- polr(formula = formula_LS, data = dataset_used, Hess = T)
 summary(glm_LS)
 
