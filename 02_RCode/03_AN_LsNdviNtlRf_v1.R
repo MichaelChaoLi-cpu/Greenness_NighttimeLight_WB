@@ -5,10 +5,11 @@
 library(ggplot2)
 library(cowplot)
 library(foreach)
-library(doParallel)
 library(randomForest)
 library(tidyverse)
 library(DALEX)
+library(doSNOW)
+library(tcltk)
 
 load("01_Data/04_dataset_used.RData")
 dataset_used <- dataset_used %>%
@@ -27,6 +28,25 @@ formula_LS <- overall_LS ~ live_environment_satefy +
 dataset_used.rf <- dataset_used %>% dplyr::select(all.vars(formula_LS), student:unemployed) %>% na.omit()
 
 
-data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
-                           importance = T, mtry = 8)
+#data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
+#                           importance = T, mtry = 8)
 ### since the there is 24 predictors, we select 24/3 ~ 8
+
+# do SNOW
+cl <- makeSOCKcluster(14)
+registerDoSNOW(cl)
+
+ntasks <- 100
+pb <- tkProgressBar(max=ntasks)
+progress <- function(n) setTkProgressBar(pb, n)
+opts <- list(progress=progress)
+
+data.rf.24 <- 
+  foreach(ntree = rep(10, ntasks), .combine = combine,
+          .multicombine=TRUE, .packages='randomForest',
+          .options.snow=opts) %dopar% {
+            randomForest(overall_LS ~., data = dataset_used.rf, 
+                         na.action = na.omit, ntree = 1000,
+                         importance = T, mtry = 8)
+          }
+# do SNOW
