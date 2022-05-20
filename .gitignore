@@ -4,3 +4,7 @@
 .Ruserdata
 02_RCode/SpecialCode/
 03_Result/
+01_Data/01_data_ext.RData
+01_Data/01_data_pool.RData
+01_Data/04_dataset_used.RData
+01_Data/05_spatial.post.id.RData

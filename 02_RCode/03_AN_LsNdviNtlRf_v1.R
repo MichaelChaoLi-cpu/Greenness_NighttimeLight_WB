@@ -69,6 +69,7 @@ diag_data.rf.24 <- model_diagnostics(explainer_data.rf.24)
 plot(diag_data.rf.24)
 plot(diag_data.rf.24, variable = "y", yvariable = "residuals")
 hist(dataset_used.rf$overall_LS, breaks = rep(0:5, 1))
+save(explainer_data.rf.24, file = "03_Results/01_explainer_data.rf.24.RData", version = 2)
 
 ### model information
 model_info(data.rf.24)
@@ -91,3 +92,4 @@ model_profile_data.rf.24 <- model_profile(explainer_data.rf.24)
 plot(model_profile_data.rf.24, variables = "NDVI")
 plot(model_profile_data.rf.24, variables = "NTL_log")
 plot(model_profile_data.rf.24, variables = "income_indiv")
+
