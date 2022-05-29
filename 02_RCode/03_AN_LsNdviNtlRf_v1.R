@@ -27,7 +27,7 @@ formula_LS <- overall_LS ~ live_environment_satefy +
   bachelor + master + phd +  NDVI + NTL_log
 
 dataset_used.rf <- dataset_used %>% dplyr::select(all.vars(formula_LS), student:unemployed) %>% na.omit()
-save(dataset_used.rf, file = "01_Data/06_dataset,rf24.RData", version = 2)
+save(dataset_used.rf, file = "01_Data/06_dataset.rf24.RData", version = 2)
 
 #data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
 #                           importance = T, mtry = 8)
