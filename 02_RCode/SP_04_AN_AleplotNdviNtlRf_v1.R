@@ -2,36 +2,71 @@
 
 # end
 
+library(foreach)
 library(randomForest)
 library(tidyverse)
-library(doSNOW)
+library(doParallel)
 library(pdp)
 
-load("DP15/03_Results/00_data.rf.24.RData")
+
 load("DP15/01_Data/06_dataset.rf24.RData")
 
-#### pdp
-cl <- makeSOCKcluster(36)
-registerDoSNOW(cl)
+#data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
+#                           importance = T, mtry = 8)
+### since the there is 24 predictors, we select 24/3 ~ 8
+cat("Here, Random forest \n")
+
+# do parallel
+cl <- makeCluster(100)
+registerDoParallel(cl)
 getDoParWorkers()
 
-pdp.rf24.NDVI <- partial(data.rf.24, pred.var = "NDVI",
+ntasks <- 10
+
+data.rf.24 <- 
+  foreach(ntree = rep(100, ntasks), .combine = randomForest::combine,
+          .multicombine=TRUE, .packages='randomForest') %dopar% {
+            randomForest(overall_LS ~., data = dataset_used.rf, 
+                         na.action = na.omit, ntree = ntree,
+                         importance = T, mtry = 8)
+          }
+stopCluster(cl)
+# do SNOW
+
+save(data.rf.24, file = "DP15/03_Results/00_data.rf.24.SP.RData", version = 2)
+cat("Here, we have saved the rf model\n")
+
+cat("Here, we are, go to pdp\n")
+
+#### pdp
+cl <- makeCluster(100)
+registerDoParallel(cl)
+getDoParWorkers()
+
+Sys.time()
+pdp.rf24.NDVI <- pdp::partial(data.rf.24, pred.var = "NDVI",
                                grid.resolution = 5000,
                                plot = F, rug = T, parallel = T,
                                paropts = list(.packages = "randomForest"))
+Sys.time()
 
 stopCluster(cl)
 save(pdp.rf24.NDVI, file = "DP15/03_Results/03_data.rf.24.PDP.NDVI.RData")
 
-cl <- makeSOCKcluster(36)
-registerDoSNOW(cl)
+cat("Here, we are, go to second pdp\n")
+
+cl <- makeCluster(100)
+registerDoParallel(cl)
 getDoParWorkers()
 
-pdp.rf24.NTL_log <- partial(data.rf.24, pred.var = "NTL_log",
+Sys.time()
+pdp.rf24.NTL_log <- pdp::partial(data.rf.24, pred.var = "NTL_log",
                          grid.resolution = 5000,
                          plot = F, rug = T, parallel = T,
                          paropts = list(.packages = "randomForest"))
+Sys.time()
 
 stopCluster(cl)
 save(pdp.rf24.NDVI, file = "DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
 
+cat("Here, done\n")
