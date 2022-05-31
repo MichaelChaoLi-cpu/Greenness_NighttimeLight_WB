@@ -9,7 +9,7 @@ library(doParallel)
 library(pdp)
 
 
-load("DP15/01_Data/06_dataset.rf24.RData")
+load("/home/usr6/q70176a/DP15/01_Data/06_dataset.rf24.RData")
 
 #data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
 #                           importance = T, mtry = 8)
@@ -33,13 +33,13 @@ data.rf.24 <-
 stopCluster(cl)
 # do SNOW
 
-save(data.rf.24, file = "DP15/03_Results/00_data.rf.24.SP.RData", version = 2)
+save(data.rf.24, file = "/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData", version = 2)
 cat("Here, we have saved the rf model\n")
 
 cat("Here, we are, go to pdp\n")
 
 #### pdp
-cl <- makeCluster(100)
+cl <- makeCluster(36)
 registerDoParallel(cl)
 getDoParWorkers()
 
@@ -51,11 +51,11 @@ pdp.rf24.NDVI <- pdp::partial(data.rf.24, pred.var = "NDVI",
 Sys.time()
 
 stopCluster(cl)
-save(pdp.rf24.NDVI, file = "DP15/03_Results/03_data.rf.24.PDP.NDVI.RData")
+save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/03_data.rf.24.PDP.NDVI.RData")
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeCluster(100)
+cl <- makeCluster(36)
 registerDoParallel(cl)
 getDoParWorkers()
 
@@ -67,6 +67,6 @@ pdp.rf24.NTL_log <- pdp::partial(data.rf.24, pred.var = "NTL_log",
 Sys.time()
 
 stopCluster(cl)
-save(pdp.rf24.NDVI, file = "DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
+save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
 
 cat("Here, done\n")
