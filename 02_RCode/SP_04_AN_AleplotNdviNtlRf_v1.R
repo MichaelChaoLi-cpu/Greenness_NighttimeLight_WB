@@ -6,7 +6,7 @@ library(foreach)
 library(randomForest)
 library(tidyverse)
 library(doSNOW)
-library(pdp)
+#library(pdp)
 
 
 
@@ -46,8 +46,17 @@ cat("Here, we have saved the rf model\n")
 
 cat("Here, we are, go to pdp\n")
 
+partialDependcyPlot <- function(dataset_used.rf, data.rf.24, aim.var, aim.value, formula.in){
+  test.predict.data <- dataset_used.rf %>% 
+    dplyr::select(-all.vars(formula.in)[1]) 
+  test.predict.data[aim.var] <- aim.value
+  predict.output <- mean(predict(data.rf.24, test.predict.data))
+  return(predict.output)
+}
+
+
 #### pdp
-cl <- makeSOCKcluster(20)
+cl <- makeSOCKcluster(36)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
@@ -57,20 +66,43 @@ progress <- function(n) {
 }
 opts <- list(progress = progress)
 
-Sys.time()
-pdp.rf24.NDVI <- pdp::partial(data.rf.24, pred.var = "NDVI",
-                               grid.resolution = 1000,
-                               plot = F, rug = T, parallel = T,
-                               paropts = list(.packages = "randomForest",
-                                              .options.snow = opts))
-Sys.time()
-
+result <- 
+  foreach(aim.value = seq(4.8, 87.8, 0.1), .combine = append, 
+          .packages=c('tidyverse',"randomForest"),
+          .options.snow = opts) %dopar% {
+            partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NDVI", aim.value, overall_LS ~.)
+            gc()
+          }
 stopCluster(cl)
+Sys.time()
+pdp.rf24.NDVI <- as.data.frame(cbind(result, seq(4.8, 87.8, 0.1)))
 save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/03_data.rf.24.PDP.NDVI.RData")
+
+
+#cl <- makeSOCKcluster(10)
+#registerDoSNOW(cl)
+#getDoParWorkers()
+#progress <- function(n) {
+#  if(n%%50 == 0){
+#    cat(sprintf("task %d is complete\n", n)) 
+#  }
+#}
+#opts <- list(progress = progress)
+
+#Sys.time()
+#pdp.rf24.NDVI <- pdp::partial(data.rf.24, pred.var = "NDVI",
+#                               grid.resolution = 1000,
+#                               plot = F, rug = T, parallel = T,
+#                               paropts = list(.packages = "randomForest",
+#                                              .options.snow = opts))
+#Sys.time()
+#
+#stopCluster(cl)
+
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeSOCKcluster(20)
+cl <- makeSOCKcluster(36)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
@@ -80,15 +112,37 @@ progress <- function(n) {
 }
 opts <- list(progress = progress)
 
-Sys.time()
-pdp.rf24.NTL_log <- pdp::partial(data.rf.24, pred.var = "NTL_log",
-                         grid.resolution = 1000,
-                         plot = F, rug = T, parallel = T,
-                         paropts = list(.packages = "randomForest",
-                                        .options.snow = opts))
-Sys.time()
-
+result <- 
+  foreach(aim.value = seq(0.01, 4.50, 0.01), .combine = append, 
+          .packages=c('tidyverse',"randomForest"),
+          .options.snow = opts) %dopar% {
+            partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NTL_log", aim.value, overall_LS ~.)
+            gc()
+          }
 stopCluster(cl)
+pdp.rf24.NTL_log <- as.data.frame(cbind(result, seq(0.01, 4.50, 0.01)))
+Sys.time()
 save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
+
+#cl <- makeSOCKcluster(10)
+#registerDoSNOW(cl)
+#getDoParWorkers()
+#progress <- function(n) {
+#  if(n%%50 == 0){
+#    cat(sprintf("task %d is complete\n", n)) 
+#  }
+#}
+#opts <- list(progress = progress)
+
+#Sys.time()
+#pdp.rf24.NTL_log <- pdp::partial(data.rf.24, pred.var = "NTL_log",
+#                         grid.resolution = 1000,
+#                         plot = F, rug = T, parallel = T,
+#                         paropts = list(.packages = "randomForest",
+#                                        .options.snow = opts))
+#Sys.time()
+
+#stopCluster(cl)
+#save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
 
 cat("Here, done\n")
