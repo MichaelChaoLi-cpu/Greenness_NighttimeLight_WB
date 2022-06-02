@@ -47,7 +47,7 @@ cat("Here, we have saved the rf model\n")
 cat("Here, we are, go to pdp\n")
 
 #### pdp
-cl <- makeSOCKcluster(36)
+cl <- makeSOCKcluster(20)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
@@ -70,7 +70,7 @@ save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/03_data.rf.24.PDP
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeSOCKcluster(36)
+cl <- makeSOCKcluster(20)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
