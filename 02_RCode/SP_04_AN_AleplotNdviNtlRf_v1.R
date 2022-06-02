@@ -56,7 +56,8 @@ partialDependcyPlot <- function(dataset_used.rf, data.rf.24, aim.var, aim.value,
 
 
 #### pdp
-cl <- makeSOCKcluster(36)
+gc()
+cl <- makeSOCKcluster(20)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
@@ -102,7 +103,7 @@ save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/03_data.rf.24.PDP
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeSOCKcluster(36)
+cl <- makeSOCKcluster(20)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
