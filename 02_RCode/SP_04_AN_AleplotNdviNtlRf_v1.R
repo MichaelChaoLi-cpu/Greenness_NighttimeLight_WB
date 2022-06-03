@@ -57,7 +57,7 @@ partialDependcyPlot <- function(dataset_used.rf, data.rf.24, aim.var, aim.value,
 
 #### pdp
 gc()
-cl <- makeSOCKcluster(20)
+cl <- makeSOCKcluster(10)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
