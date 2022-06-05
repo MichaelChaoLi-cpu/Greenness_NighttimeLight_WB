@@ -124,7 +124,7 @@ result <-
 stopCluster(cl)
 pdp.rf24.NTL_log <- as.data.frame(cbind(result, seq(0.01, 4.50, 0.01)))
 Sys.time()
-save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
+save(pdp.rf24.NTL_log, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
 
 #cl <- makeSOCKcluster(10)
 #registerDoSNOW(cl)
