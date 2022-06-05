@@ -6,6 +6,7 @@ library(randomForest)
 library(tidyverse)
 library(ALEPlot)
 library(plotly)
+library(ggplot2)
 
 load("03_Results/00_data.rf.24.RData")
 load("01_Data/06_dataset.rf24.RData")
@@ -55,8 +56,32 @@ z.vector <- as.vector(z.matrix)
 
 ale.dataframe <- cbind(x.vector, y.vector, z.vector) %>% as.data.frame()
 rm(x.vector, y.vector, z.vector)
+colnames(ale.dataframe) <- c("NDVI", "NTL", "LS")
 
 p <- plot_ly(x = ALE.2.rf24.NDVI.NTL.500$x.values[[1]], y = ALE.2.rf24.NDVI.NTL.500$x.values[[2]],
              z = ALE.2.rf24.NDVI.NTL.500$f.values,
              type = "surface")
 p
+
+NDVI.line <- 
+  ggplot(ale.dataframe, aes(x = NDVI, y = LS, group = NTL)) +
+  geom_line(alpha = 0.05, size = 0.5) +
+  theme_bw()
+jpeg(file="04_Figure/02_NDVI.line.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
+NDVI.line
+dev.off()
+
+NDVI.point <- 
+  ggplot(ale.dataframe, aes(x = NDVI, y = LS)) +
+  geom_point(alpha = 0.5, shape = 16, color = "grey70", size  = 0.5) +
+  geom_smooth() +
+  theme_bw()
+jpeg(file="04_Figure/03_NDVI.point.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
+NDVI.point
+dev.off()
+
+#####
+(NDVI.line.pdp <- 
+  ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
+  geom_point(alpha = 0.5, shape = 16, color = "grey70", size  = 0.5))
+  

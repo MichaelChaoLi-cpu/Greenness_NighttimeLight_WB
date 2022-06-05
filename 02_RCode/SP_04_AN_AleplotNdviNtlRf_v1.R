@@ -54,7 +54,7 @@ partialDependcyPlot <- function(dataset_used.rf, data.rf.24, aim.var, aim.value,
   return(predict.output)
 }
 
-run <- F
+run <- T
 if(run){
   #### pdp
   gc()
@@ -73,7 +73,6 @@ if(run){
             .packages=c('tidyverse',"randomForest"),
             .options.snow = opts) %dopar% {
               partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NDVI", aim.value, overall_LS ~.)
-              gc()
             }
   stopCluster(cl)
   Sys.time()
@@ -119,7 +118,6 @@ result <-
           .packages=c('tidyverse',"randomForest"),
           .options.snow = opts) %dopar% {
             partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NTL_log", aim.value, overall_LS ~.)
-            gc()
           }
 stopCluster(cl)
 pdp.rf24.NTL_log <- as.data.frame(cbind(result, seq(0.01, 4.50, 0.01)))
