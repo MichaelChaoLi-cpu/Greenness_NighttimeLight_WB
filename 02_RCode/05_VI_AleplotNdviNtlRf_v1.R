@@ -8,6 +8,67 @@ library(ALEPlot)
 library(plotly)
 library(ggplot2)
 
+findBestFitFunction <- function(input_pdp, highest_order = 20, decide_value = 0.99, weights = NULL){
+  if (!is.null(weights)){
+    if(!(nrow(input_pdp)==length(weights))){stop("Weights have a different length with input data!")}
+  }
+  input_pdp <- input_pdp %>% as.matrix() %>% as.data.frame()
+  input_pdp <- input_pdp %>% dplyr::select('yhat', dplyr::everything())
+  y <- input_pdp %>% dplyr::select('yhat')
+  x <- input_pdp %>% dplyr::select(-'yhat')
+  for (order in seq(1,highest_order)){
+    x[,paste0("order_", as.character(order))] <- input_pdp[,2]^order
+  }
+  x <- x[2:ncol(x)]
+  r2_array <- c()
+  first_time <- T
+  if(is.null(weights)){cat('Unweighted!\n')} else{
+    cat('Weighted!\n')
+  }
+  for (order in seq(1,highest_order)){
+    data <- cbind(y, x[1:order])
+    
+    if(is.null(weights)) {
+      regression <- lm(yhat ~ ., data)
+      r2 <- summary(regression)$adj.r.squared
+    } else {
+      regression <- lm(yhat ~ ., data, weights = weights)
+      r2 <- summary(regression)$adj.r.squared
+    }
+    if((r2>decide_value)&(first_time == T)){
+      first_over_decide_value <- order
+      keep.model <- regression
+      first_time <- F
+    }
+    r2_array <- append(r2_array, r2)
+  }
+  if(first_time == T){
+    first_over_decide_value <- NULL
+    keep.model <- regression
+  }
+  cat(first_over_decide_value)
+  result <- list(first_over_decide_value, r2_array, keep.model)
+  return(result)
+}
+
+predictPDP <- function(input_pdp, decided_order = 20, weights_vector = NULL){
+  if (is.null(decided_order)) {decided_order = 20}
+  cat("decide order: ", decided_order)
+  input_pdp <- input_pdp %>% as.matrix() %>% as.data.frame()
+  input_pdp <- input_pdp %>% dplyr::select('yhat', dplyr::everything())
+  y <- input_pdp %>% dplyr::select('yhat')
+  x <- input_pdp %>% dplyr::select(-'yhat')
+  for (order in seq(1,decided_order)){
+    x[,paste0("order_", as.character(order))] <- input_pdp[,2]^order
+  }
+  x <- x[2:ncol(x)]
+  data <- cbind(y, x)
+  regression <- lm(yhat ~., data = data, weights = weights_vector)
+  input_pdp$yhat_pred <- predict(regression, data)
+  output_list <- list(input_pdp, regression)
+  return(output_list)
+}
+
 load("03_Results/00_data.rf.24.RData")
 load("01_Data/06_dataset.rf24.RData")
 load("03_Results/02_ALE.2.rf24.RData")
@@ -80,6 +141,37 @@ jpeg(file="04_Figure/03_NDVI.point.jpeg", width = 297, height = 105, units = "mm
 NDVI.point
 dev.off()
 
+NDVI.ALE.result.df <- ale.dataframe %>% dplyr::select(LS, NDVI) %>% rename(yhat = LS)
+result.NDVI.ALE <- findBestFitFunction(NDVI.ALE.result.df, 20, 0.99)
+predict.NDVI.ALE <- predictPDP(NDVI.ALE.result.df, 10)
+ggplot(predict.NDVI.ALE[[1]], aes(x = NDVI)) +
+  geom_point(aes(y = yhat, color = "yhat")) +
+  geom_smooth(aes(y = yhat)) +
+  geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+
+order_1 <- seq(4.8, 87.8, 0.1)
+order_2 <- seq(4.8, 87.8, 0.1)^2
+order_3 <- seq(4.8, 87.8, 0.1)^3
+order_4 <- seq(4.8, 87.8, 0.1)^4
+order_5 <- seq(4.8, 87.8, 0.1)^5
+order_6 <- seq(4.8, 87.8, 0.1)^6
+order_7 <- seq(4.8, 87.8, 0.1)^7
+order_8 <- seq(4.8, 87.8, 0.1)^8
+order_9 <- seq(4.8, 87.8, 0.1)^9
+order_10 <- seq(4.8, 87.8, 0.1)^10
+point.0.1.df <- cbind(order_1, order_2, order_3, order_4, order_5,
+                      order_6, order_7, order_8, order_9, order_10) %>% as.data.frame()
+yhat_pred <- predict(predict.NDVI.ALE[[2]], point.0.1.df)
+predict.NDVI.point.0.1 <- cbind(yhat_pred, order_1) %>% as.data.frame()
+(NDVI.line.predict <- 
+  ggplot() +
+  geom_line(aes(x = ale.dataframe$NDVI, y = ale.dataframe$LS, group = ale.dataframe$NTL),
+            alpha = 0.05, size = 0.5) +
+  geom_line(aes(x = predict.NDVI.point.0.1$order_1, y = predict.NDVI.point.0.1$yhat_pred),
+            size = 2, color = "red") +
+  xlab("NDVI") + ylab("LS") +
+  theme_bw() )
+  
 #####
 (NDVI.line.pdp <- 
   ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
