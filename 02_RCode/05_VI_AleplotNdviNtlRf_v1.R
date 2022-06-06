@@ -141,9 +141,29 @@ jpeg(file="04_Figure/03_NDVI.point.jpeg", width = 297, height = 105, units = "mm
 NDVI.point
 dev.off()
 
+NTL.line <- 
+  ggplot(ale.dataframe, aes(x = NTL, y = LS, group = NDVI)) +
+  geom_line(alpha = 0.05, size = 0.5) +
+  theme_bw()
+jpeg(file="04_Figure/04_NTL.line.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
+NTL.line
+dev.off()
+
+NTL.point <- 
+  ggplot(ale.dataframe, aes(x = NTL, y = LS)) +
+  geom_point(alpha = 0.5, shape = 16, color = "grey70", size  = 0.5) +
+  geom_smooth() +
+  theme_bw()
+jpeg(file="04_Figure/05_NTL.point.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
+NTL.point
+dev.off()
+
+
+
+
 NDVI.ALE.result.df <- ale.dataframe %>% dplyr::select(LS, NDVI) %>% rename(yhat = LS)
 result.NDVI.ALE <- findBestFitFunction(NDVI.ALE.result.df, 20, 0.99)
-predict.NDVI.ALE <- predictPDP(NDVI.ALE.result.df, 10)
+predict.NDVI.ALE <- predictPDP(NDVI.ALE.result.df, 8)
 ggplot(predict.NDVI.ALE[[1]], aes(x = NDVI)) +
   geom_point(aes(y = yhat, color = "yhat")) +
   geom_smooth(aes(y = yhat)) +
@@ -171,9 +191,14 @@ predict.NDVI.point.0.1 <- cbind(yhat_pred, order_1) %>% as.data.frame()
             size = 2, color = "red") +
   xlab("NDVI") + ylab("LS") +
   theme_bw() )
+jpeg(file="04_Figure/03_NDVI.pseudoFitLine.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
+NDVI.line.predict
+dev.off()
+
   
 #####
 (NDVI.line.pdp <- 
   ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
   geom_point(alpha = 0.5, shape = 16, color = "grey70", size  = 0.5))
   
+
