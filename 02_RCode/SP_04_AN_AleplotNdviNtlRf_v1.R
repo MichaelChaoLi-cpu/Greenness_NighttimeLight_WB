@@ -54,7 +54,7 @@ partialDependcyPlot <- function(dataset_used.rf, data.rf.24, aim.var, aim.value,
   return(predict.output)
 }
 
-run <- T
+run <- F
 if(run){
   #### pdp
   gc()
@@ -103,7 +103,7 @@ if(run){
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeSOCKcluster(8)
+cl <- makeSOCKcluster(4)
 registerDoSNOW(cl)
 getDoParWorkers()
 progress <- function(n) {
