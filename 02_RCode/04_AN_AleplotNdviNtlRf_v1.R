@@ -123,12 +123,13 @@ if(run){
   ALE.NDVI.only.result <- cbind(ALE.2.rf24.NDVI.only$x.values, ALE.2.rf24.NDVI.only$f.values) %>%
     as.data.frame()
   colnames(ALE.NDVI.only.result) <- c("NDVI", "yhat")
-  ALE.NDVI.only.pseudoFunction <- findBestFitFunction(ALE.NDVI.only.result, 20, 0.99, weights = NULL)
+  ALE.NDVI.only.pseudoFunction <- findBestFitFunction(ALE.NDVI.only.result, 12, 0.99, weights = NULL)
   
   pred.ALE.NDVI.only <- predictPDP(input_pdp = ALE.NDVI.only.result, decided_order = 12)
   ggplot(pred.ALE.NDVI.only[[1]], aes(x = NDVI)) +
     geom_point(aes(y = yhat, color = "yhat")) +
-    geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+    geom_point(aes(y = yhat_pred, color = "yhat_pred")) +
+    theme_bw()
   
   ALE.NTL.only.result <- cbind(ALE.2.rf24.NTL.only$x.values, ALE.2.rf24.NTL.only$f.values) %>%
     as.data.frame()
@@ -138,7 +139,8 @@ if(run){
   pred.ALE.NTL.only <- predictPDP(input_pdp = ALE.NTL.only.result, decided_order = 2)
   ggplot(pred.ALE.NTL.only[[1]], aes(x = NTL)) +
     geom_point(aes(y = yhat, color = "yhat")) +
-    geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+    geom_point(aes(y = yhat_pred, color = "yhat_pred")) +
+    theme_bw()
   
   ALE.income.only.result <- cbind(ALE.2.rf24.income.only$x.values, ALE.2.rf24.income.only$f.values) %>%
     as.data.frame()
@@ -148,7 +150,8 @@ if(run){
   pred.ALE.income.only <- predictPDP(input_pdp = ALE.income.only.result, decided_order = 6)
   ggplot(pred.ALE.income.only[[1]], aes(x = income)) +
     geom_point(aes(y = yhat, color = "yhat")) +
-    geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+    geom_point(aes(y = yhat_pred, color = "yhat_pred")) +
+    theme_bw()
 }
 
 ####
@@ -182,3 +185,30 @@ if(run){
 } else {
   load("03_Results/03_data.rf.24.PDP.NDVI.RData")
 }
+
+ALE.NDVI.only.pseudoFunction <- findBestFitFunction(ALE.NDVI.only.result, 12, 0.99, weights = NULL)
+ALE.NDVI.pseudo.coeff <- ALE.NDVI.only.pseudoFunction[[3]] %>% coefficients() %>% as.numeric()
+ME.estimation.dataset.used <- dataset_used.rf %>%
+  mutate(ME.NDVI = ALE.NDVI.pseudo.coeff[2] + ALE.NDVI.pseudo.coeff[3] * NDVI + 
+           ALE.NDVI.pseudo.coeff[4] * NDVI^2 + ALE.NDVI.pseudo.coeff[5] * NDVI^3 +
+           ALE.NDVI.pseudo.coeff[6] * NDVI^4 + ALE.NDVI.pseudo.coeff[7] * NDVI^5 +
+           ALE.NDVI.pseudo.coeff[8] * NDVI^6 + ALE.NDVI.pseudo.coeff[9] * NDVI^7 +
+           ALE.NDVI.pseudo.coeff[10] * NDVI^8 + ALE.NDVI.pseudo.coeff[11] * NDVI^9 + 
+           ALE.NDVI.pseudo.coeff[12] * NDVI^10 + ALE.NDVI.pseudo.coeff[13] * NDVI^11)
+
+ALE.NTL.only.pseudoFunction <- findBestFitFunction(ALE.NTL.only.result, 2, 0.99, weights = NULL)
+ALE.NTL.pseudo.coeff <- ALE.NTL.only.pseudoFunction[[3]] %>% coefficients() %>% as.numeric()
+ME.estimation.dataset.used <- ME.estimation.dataset.used %>%
+  mutate(ME.NTL = (ALE.NTL.pseudo.coeff[2] + ALE.NTL.pseudo.coeff[3] * NTL_log)/exp(NTL_log) )
+
+ALE.income.only.pseudoFunction <- findBestFitFunction(ALE.income.only.result, 6, 0.99, weights = NULL)
+ALE.income.pseudo.coeff <- ALE.income.only.pseudoFunction[[3]] %>% coefficients() %>% as.numeric()
+ME.estimation.dataset.used <- ME.estimation.dataset.used %>%
+  mutate(ME.income = ALE.income.pseudo.coeff[2] + ALE.income.pseudo.coeff[3] * income_indiv + 
+           ALE.income.pseudo.coeff[4] * income_indiv^2 + ALE.income.pseudo.coeff[5] * income_indiv^3 +
+           ALE.income.pseudo.coeff[6] * income_indiv^4 + ALE.income.pseudo.coeff[7] * income_indiv^5)
+
+ME.estimation.dataset.used <- ME.estimation.dataset.used %>%
+  mutate(MRS.NDVI = ME.NDVI/ME.income,
+         MRS.NTL = ME.NTL/ME.income)
+save(ME.estimation.dataset.used, file = "03_Results/07_MRS.result.NDVI.NTL.RData", version = 2)

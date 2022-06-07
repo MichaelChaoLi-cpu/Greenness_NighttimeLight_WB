@@ -164,4 +164,7 @@ load("03_Results/03_data.rf.24.PDP.NDVI.RData")
   ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
   geom_line(alpha = 0.9, color = "red", size  = 0.5))
   
-
+load("03_Results/04_data.rf.24.PDP.NTL.RData")
+(NTL.line.pdp <- 
+    ggplot(pdp.rf24.NTL_log, aes(x = V2, y = result)) +
+    geom_line(alpha = 0.9, color = "red", size  = 0.5))
