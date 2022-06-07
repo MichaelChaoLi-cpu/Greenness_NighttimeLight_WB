@@ -157,48 +157,11 @@ NTL.point <-
 jpeg(file="04_Figure/05_NTL.point.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
 NTL.point
 dev.off()
-
-
-
-
-NDVI.ALE.result.df <- ale.dataframe %>% dplyr::select(LS, NDVI) %>% rename(yhat = LS)
-result.NDVI.ALE <- findBestFitFunction(NDVI.ALE.result.df, 20, 0.99)
-predict.NDVI.ALE <- predictPDP(NDVI.ALE.result.df, 8)
-ggplot(predict.NDVI.ALE[[1]], aes(x = NDVI)) +
-  geom_point(aes(y = yhat, color = "yhat")) +
-  geom_smooth(aes(y = yhat)) +
-  geom_point(aes(y = yhat_pred, color = "yhat_pred"))
-
-order_1 <- seq(4.8, 87.8, 0.1)
-order_2 <- seq(4.8, 87.8, 0.1)^2
-order_3 <- seq(4.8, 87.8, 0.1)^3
-order_4 <- seq(4.8, 87.8, 0.1)^4
-order_5 <- seq(4.8, 87.8, 0.1)^5
-order_6 <- seq(4.8, 87.8, 0.1)^6
-order_7 <- seq(4.8, 87.8, 0.1)^7
-order_8 <- seq(4.8, 87.8, 0.1)^8
-order_9 <- seq(4.8, 87.8, 0.1)^9
-order_10 <- seq(4.8, 87.8, 0.1)^10
-point.0.1.df <- cbind(order_1, order_2, order_3, order_4, order_5,
-                      order_6, order_7, order_8, order_9, order_10) %>% as.data.frame()
-yhat_pred <- predict(predict.NDVI.ALE[[2]], point.0.1.df)
-predict.NDVI.point.0.1 <- cbind(yhat_pred, order_1) %>% as.data.frame()
-(NDVI.line.predict <- 
-  ggplot() +
-  geom_line(aes(x = ale.dataframe$NDVI, y = ale.dataframe$LS, group = ale.dataframe$NTL),
-            alpha = 0.05, size = 0.5) +
-  geom_line(aes(x = predict.NDVI.point.0.1$order_1, y = predict.NDVI.point.0.1$yhat_pred),
-            size = 2, color = "red") +
-  xlab("NDVI") + ylab("LS") +
-  theme_bw() )
-jpeg(file="04_Figure/03_NDVI.pseudoFitLine.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
-NDVI.line.predict
-dev.off()
-
   
 #####
+load("03_Results/03_data.rf.24.PDP.NDVI.RData")
 (NDVI.line.pdp <- 
   ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
-  geom_point(alpha = 0.5, shape = 16, color = "grey70", size  = 0.5))
+  geom_line(alpha = 0.9, color = "red", size  = 0.5))
   
 
