@@ -111,13 +111,14 @@ ALE.2.rf24.income.only = ALEPlot(dataset_used.rf[,2:25], data.rf.24, pred.fun = 
                                  J = c('income_indiv'), K = 500, NA.plot = T)
 run <- F
 if(run){
-  save(ALE.2.rf24.NDVI.only, ALE.2.rf24.NTL.only, file = "03_Results/06_ALE.2.rf24.NDVI.NTL.only.500.RData")
+  save(ALE.2.rf24.NDVI.only, ALE.2.rf24.NTL.only, ALE.2.rf24.income.only,
+       file = "03_Results/06_ALE.2.rf24.NDVI.NTL.only.500.RData")
 } else {
   load("03_Results/06_ALE.2.rf24.NDVI.NTL.only.500.RData") 
 }
 
-#here i think this is unnecessary to get a continuous function here.
-run <- F
+#here i think this is unnecessary to get a continuous function here. // we still need
+run <- T
 if(run){
   ALE.NDVI.only.result <- cbind(ALE.2.rf24.NDVI.only$x.values, ALE.2.rf24.NDVI.only$f.values) %>%
     as.data.frame()
@@ -126,6 +127,26 @@ if(run){
   
   pred.ALE.NDVI.only <- predictPDP(input_pdp = ALE.NDVI.only.result, decided_order = 12)
   ggplot(pred.ALE.NDVI.only[[1]], aes(x = NDVI)) +
+    geom_point(aes(y = yhat, color = "yhat")) +
+    geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+  
+  ALE.NTL.only.result <- cbind(ALE.2.rf24.NTL.only$x.values, ALE.2.rf24.NTL.only$f.values) %>%
+    as.data.frame()
+  colnames(ALE.NTL.only.result) <- c("NTL", "yhat")
+  ALE.NTL.only.pseudoFunction <- findBestFitFunction(ALE.NTL.only.result, 20, 0.99, weights = NULL)
+  
+  pred.ALE.NTL.only <- predictPDP(input_pdp = ALE.NTL.only.result, decided_order = 2)
+  ggplot(pred.ALE.NTL.only[[1]], aes(x = NTL)) +
+    geom_point(aes(y = yhat, color = "yhat")) +
+    geom_point(aes(y = yhat_pred, color = "yhat_pred"))
+  
+  ALE.income.only.result <- cbind(ALE.2.rf24.income.only$x.values, ALE.2.rf24.income.only$f.values) %>%
+    as.data.frame()
+  colnames(ALE.income.only.result) <- c("income", "yhat")
+  ALE.NTL.only.pseudoFunction <- findBestFitFunction(ALE.income.only.result, 20, 0.99, weights = NULL)
+  
+  pred.ALE.income.only <- predictPDP(input_pdp = ALE.income.only.result, decided_order = 6)
+  ggplot(pred.ALE.income.only[[1]], aes(x = income)) +
     geom_point(aes(y = yhat, color = "yhat")) +
     geom_point(aes(y = yhat_pred, color = "yhat_pred"))
 }
