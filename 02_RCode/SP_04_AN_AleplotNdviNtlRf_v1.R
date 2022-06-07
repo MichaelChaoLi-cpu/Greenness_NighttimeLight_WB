@@ -103,27 +103,31 @@ if(run){
 
 cat("Here, we are, go to second pdp\n")
 
-cl <- makeSOCKcluster(4)
-registerDoSNOW(cl)
-getDoParWorkers()
-progress <- function(n) {
-  if(n%%50 == 0){
-    cat(sprintf("task %d is complete\n", n)) 
+run <- F
+if(run){
+  #### pdp
+  gc()
+  cl <- makeSOCKcluster(4)
+  registerDoSNOW(cl)
+  getDoParWorkers()
+  progress <- function(n) {
+    if(n%%50 == 0){
+      cat(sprintf("task %d is complete\n", n)) 
+    }
   }
+  opts <- list(progress = progress)
+  
+  result <- 
+    foreach(aim.value = seq(0.01, 4.50, 0.01), .combine = append, 
+            .packages=c('tidyverse',"randomForest"),
+            .options.snow = opts) %dopar% {
+              partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NTL_log", aim.value, overall_LS ~.)
+            }
+  stopCluster(cl)
+  pdp.rf24.NTL_log <- as.data.frame(cbind(result, seq(0.01, 4.50, 0.01)))
+  Sys.time()
+  save(pdp.rf24.NTL_log, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
 }
-opts <- list(progress = progress)
-
-result <- 
-  foreach(aim.value = seq(0.01, 4.50, 0.01), .combine = append, 
-          .packages=c('tidyverse',"randomForest"),
-          .options.snow = opts) %dopar% {
-            partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "NTL_log", aim.value, overall_LS ~.)
-          }
-stopCluster(cl)
-pdp.rf24.NTL_log <- as.data.frame(cbind(result, seq(0.01, 4.50, 0.01)))
-Sys.time()
-save(pdp.rf24.NTL_log, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
-
 #cl <- makeSOCKcluster(10)
 #registerDoSNOW(cl)
 #getDoParWorkers()
@@ -144,5 +148,33 @@ save(pdp.rf24.NTL_log, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.
 
 #stopCluster(cl)
 #save(pdp.rf24.NDVI, file = "/home/usr6/q70176a/DP15/03_Results/04_data.rf.24.PDP.NTL.RData")
+
+cat("Here, we are, go to third pdp\n")
+
+run <- F
+if(run){
+  #### pdp
+  gc()
+  cl <- makeSOCKcluster(4)
+  registerDoSNOW(cl)
+  getDoParWorkers()
+  progress <- function(n) {
+    if(n%%50 == 0){
+      cat(sprintf("task %d is complete\n", n)) 
+    }
+  }
+  opts <- list(progress = progress)
+  
+  result <- 
+    foreach(aim.value = dataset_used.rf$income_indiv %>% unique() %>% sort(), .combine = append, 
+            .packages=c('tidyverse',"randomForest"),
+            .options.snow = opts) %dopar% {
+              partialDependcyPlot(dataset_used.rf %>% na.omit(), data.rf.24, "income_indiv", aim.value, overall_LS ~.)
+            }
+  stopCluster(cl)
+  pdp.rf24.NTL_log <- as.data.frame(cbind(result, dataset_used.rf$income_indiv %>% unique() %>% sort()))
+  Sys.time()
+  save(pdp.rf24.NTL_log, file = "/home/usr6/q70176a/DP15/03_Results/05_data.rf.24.PDP.income.RData")
+}
 
 cat("Here, done\n")

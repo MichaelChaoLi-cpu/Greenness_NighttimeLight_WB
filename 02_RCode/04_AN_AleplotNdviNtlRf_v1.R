@@ -40,6 +40,14 @@ ALE.2.rf24.NDVI.NTL.500 = ALEPlot(dataset_used.rf[,2:25], data.rf.24, pred.fun =
                                   J = c('NDVI', 'NTL_log'), K = 500, NA.plot = T)
 save(ALE.2.rf24.NDVI.NTL.500, file = "03_Results/02_ALE.2.rf24.NDVI.NTL.500.RData")
 
+ALE.2.rf24.NDVI.only = ALEPlot(dataset_used.rf[,2:25], data.rf.24, pred.fun = yhat,
+                               J = c('NDVI'), K = 500, NA.plot = T)
+
+ALE.2.rf24.NTL.only = ALEPlot(dataset_used.rf[,2:25], data.rf.24, pred.fun = yhat,
+                               J = c('NTL_log'), K = 500, NA.plot = T)
+
+ALE.2.rf24.income.only = ALEPlot(dataset_used.rf[,2:25], data.rf.24, pred.fun = yhat,
+                                 J = c('income_indiv'), K = 500, NA.plot = T)
 
 ####
 # this part is done by supercomputer
