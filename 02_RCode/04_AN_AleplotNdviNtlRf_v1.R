@@ -152,6 +152,8 @@ if(run){
     geom_point(aes(y = yhat, color = "yhat")) +
     geom_point(aes(y = yhat_pred, color = "yhat_pred")) +
     theme_bw()
+  save(pred.ALE.NDVI.only, ALE.NTL.only.result, ALE.income.only.result,
+       file = "03_Results/10_Pseudo.funciton.ALE.RData")
 }
 
 ####

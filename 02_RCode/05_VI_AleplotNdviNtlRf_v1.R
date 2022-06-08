@@ -225,3 +225,45 @@ grid.arrange(NDVI.line.ale, NTL.line.ale, income.line.ale,
              nrow = 1)
 dev.off()
 
+load("03_Results/10_Pseudo.funciton.ALE.RData")
+(Fuction.NDVI.line.ale <- 
+    ggplot(pred.ALE.NDVI.only[[1]], aes(x = NDVI)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "green3",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "NDVI (%)") +
+    scale_y_continuous(name = "LS Prediction - Accumulated Local Effects") +
+    theme_bw() +
+    annotate("text", x = 6, y = 0.06, label = 'bold("a")', parse = TRUE, size = 5) +
+    annotate("text", x = 21, y = -0.075, label = 'bold("R2 = 98.15%")', parse = TRUE, size = 5))
+
+(Fuction.NTL.line.ale <- 
+    ggplot(pred.ALE.NTL.only[[1]], aes(x = NTL)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "chocolate1",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "Logarithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Accumulated Local Effects") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.09, label = 'bold("b")', parse = TRUE, size = 5) +
+    annotate("text", x = 0.8, y = -0.25, label = 'bold("R2 = 99.27%")', parse = TRUE, size = 5))
+
+(Fuction.income.line.ale <- 
+    ggplot(pred.ALE.income.only[[1]], aes(x = income)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "magenta3",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Accumulated Local Effects") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.4, label = 'bold("c")', parse = TRUE, size = 5) +
+    annotate("text", x = 25, y = -0.12, label = 'bold("R2 = 99.53%")', parse = TRUE, size = 5))
+
+jpeg(file = "04_Figure/10_pseudoFun_ALE.jpeg", width = 297, height = 90,
+     units = "mm", quality = 300, res = 300)
+grid.arrange(Fuction.NDVI.line.ale, Fuction.NTL.line.ale, Fuction.income.line.ale,
+             nrow = 1)
+dev.off()
