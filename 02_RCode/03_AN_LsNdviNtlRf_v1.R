@@ -91,5 +91,9 @@ lm(overall_LS ~., data = dataset_used.rf) %>% summary()
 model_profile_data.rf.24 <- model_profile(explainer_data.rf.24)
 plot(model_profile_data.rf.24, variables = "NDVI")
 plot(model_profile_data.rf.24, variables = "NTL_log")
-plot(model_profile_data.rf.24, variables = "income_indiv")
+pdp.income <- plot(model_profile_data.rf.24, variables = "income_indiv")
 
+pdp.income.df <- pdp.income$data %>%
+  dplyr::select("_x_", "_yhat_")
+colnames(pdp.income.df) <- c("V2", "result")
+save(pdp.income.df, file = "03_Results/05_data.rf.24.PDP.income.RData")

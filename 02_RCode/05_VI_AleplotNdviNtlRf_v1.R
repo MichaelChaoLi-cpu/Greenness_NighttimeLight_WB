@@ -161,10 +161,33 @@ dev.off()
 #####
 load("03_Results/03_data.rf.24.PDP.NDVI.RData")
 (NDVI.line.pdp <- 
-  ggplot(pdp.rf24.NDVI, aes(x = V2, y = result)) +
-  geom_line(alpha = 0.9, color = "red", size  = 0.5))
+  ggplot(pdp.rf24.NDVI) +
+  geom_line( aes(x = V2, y = result), alpha = 0.5, color = "green3", size  = 1) +
+  scale_x_continuous(name = "NDVI (%)") +
+  scale_y_continuous(name = "LS Prediction - Partial Dependency Profile") +
+  theme_bw() +
+  annotate("text", x = 6, y = 3.39, label = 'bold("a")', parse = TRUE, size = 5))
+
   
 load("03_Results/04_data.rf.24.PDP.NTL.RData")
 (NTL.line.pdp <- 
     ggplot(pdp.rf24.NTL_log, aes(x = V2, y = result)) +
-    geom_line(alpha = 0.9, color = "red", size  = 0.5))
+    geom_line(alpha = 0.5, color = "chocolate1", size  = 1) +
+    scale_x_continuous(name = "Logatithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Partial Dependency Profile") +
+    theme_bw() +
+    annotate("text", x = 0, y = 3.42, label = 'bold("b")', parse = TRUE, size = 5))
+
+load("03_Results/05_data.rf.24.PDP.income.RData")
+(income.line.pdp <- 
+    ggplot(pdp.income.df, aes(x = V2, y = result)) +
+    geom_line(alpha = 0.5, color = "magenta3", size  = 1) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Partial Dependency Profile") +
+    theme_bw() +
+    annotate("text", x = 0, y = 3.7, label = 'bold("c")', parse = TRUE, size = 5))
+
+jpeg(file = "04_Figure/08_PDP.jpeg", width = 297, height = 90, units = "mm", quality = 300, res = 300)
+grid.arrange(NDVI.line.pdp, NTL.line.pdp, income.line.pdp,
+             nrow = 1)
+dev.off()
