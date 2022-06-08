@@ -6,6 +6,7 @@ library(randomForest)
 library(tidyverse)
 library(sp)
 library(rgdal)
+library(spdplyr)
 
 run <- F
 if(run){
@@ -36,17 +37,52 @@ if(run){
   save(dataset_used.rf.merge, file = "03_Results/08_MRS.result.NDVI.NTL.with.loc.RData")
 }
 
-meshFile <- readOGR(dsn = "C:/11_Article/01_Data/01_mesh", layer = "MeshFile")
-meshFile@data <- meshFile@data %>% dplyr::select(G04d_001) 
-meshFile@data$G04d_001 <- meshFile@data$G04d_001 %>% as.numeric()
+# make the raster -180 -60 180 60
+nx = 86                                       # number of cells in the x direction
+ny = 97                                     # number of cells in the y direction
+xmin = 122.875                                     # x coordinate of lower, left cell center 
+ymin = 23.875                                     # y coordinate of lower, left cell center 
+xsize = 0.25                                   # extent of cells in x direction
+ysize = 0.25                                   # extent of cells in y direction
+proj <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
+
+addcoord <- function(nx,xmin,xsize,ny,ymin,ysize,proj) { # Michael Pyrcz, March, 2018                      
+  # makes a 2D dataframe with coordinates based on GSLIB specification
+  coords = matrix(nrow = nx*ny,ncol=2)
+  ixy = 1
+  for(iy in 1:nx) {
+    for(ix in 1:ny) {
+      coords[ixy,1] = xmin + (ix-1)*xsize  
+      coords[ixy,2] = ymin + (iy-1)*ysize 
+      ixy = ixy + 1
+    }
+  }
+  coords.df = data.frame(coords)
+  colnames(coords.df) <- c("X","Y")
+  coords.df$id = 1:nrow(coords.df)
+  xy <- coords.df[,c(1,2)]
+  coords.df <- SpatialPointsDataFrame(coords = xy, data = coords.df %>% dplyr::select("id"),
+                                      proj4string = CRS(proj))
+  return (coords.df)
+  
+}
+
+coords <- addcoord(nx,xmin,xsize,ny,ymin,ysize,proj)
+
+coords <- as(coords, 'SpatialPixelsDataFrame')
+coords <- as(coords, 'SpatialPolygonsDataFrame')
 
 load("03_Results/08_MRS.result.NDVI.NTL.with.loc.RData")
-proj <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
 xy <- dataset_used.rf.merge %>% dplyr::select(lon, lat)
 MRS.result.sp <- SpatialPointsDataFrame(coords = xy, data = dataset_used.rf.merge[,c(1, 2, 3, 4, 5, 6, 7)],
                                                    proj4string = CRS(proj))
 rm(xy)
 
-grid.data <- over(meshFile, MRS.result.sp[,"MRS.NDVI"], fn = mean)
-meshFile$MRS.NDVI <- grid.data$MRS.NDVI
-grid.data <- over(meshFile, MRS.result.sp[,"MRS.NTL"], fn = mean)
+grid.data <- over(coords, MRS.result.sp[,"MRS.NDVI"], fn = mean)
+coords$MRS.NDVI <- grid.data$MRS.NDVI
+grid.data <- over(coords, MRS.result.sp[,"MRS.NTL"], fn = mean)
+coords$MRS.NTL <- grid.data$MRS.NTL
+
+coords.deleteNA <- coords %>% filter(!is.na(MRS.NDVI))
+
+save(coords.deleteNA, file = "03_Results/09_coords.deleteNA.RData")
