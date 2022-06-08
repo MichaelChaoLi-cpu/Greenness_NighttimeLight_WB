@@ -173,7 +173,7 @@ load("03_Results/04_data.rf.24.PDP.NTL.RData")
 (NTL.line.pdp <- 
     ggplot(pdp.rf24.NTL_log, aes(x = V2, y = result)) +
     geom_line(alpha = 0.5, color = "chocolate1", size  = 1) +
-    scale_x_continuous(name = "Logatithm of NTL") +
+    scale_x_continuous(name = "Logarithm of NTL") +
     scale_y_continuous(name = NULL) + # "LS Prediction - Partial Dependency Profile") +
     theme_bw() +
     annotate("text", x = 0, y = 3.42, label = 'bold("b")', parse = TRUE, size = 5))
@@ -191,3 +191,37 @@ jpeg(file = "04_Figure/08_PDP.jpeg", width = 297, height = 90, units = "mm", qua
 grid.arrange(NDVI.line.pdp, NTL.line.pdp, income.line.pdp,
              nrow = 1)
 dev.off()
+
+load("03_Results/06_ALE.2.rf24.NDVI.NTL.only.500.RData")
+(NDVI.line.ale <- 
+    ggplot() +
+    geom_line( aes(x = ALE.2.rf24.NDVI.only$x.values, y = ALE.2.rf24.NDVI.only$f.values),
+               alpha = 0.5, color = "green3", size  = 1) +
+    scale_x_continuous(name = "NDVI (%)") +
+    scale_y_continuous(name = "LS Prediction - Accumulated Local Effects") +
+    theme_bw() +
+    annotate("text", x = 6, y = 0.06, label = 'bold("a")', parse = TRUE, size = 5))
+
+(NTL.line.ale <- 
+    ggplot() +
+    geom_line(aes(x = ALE.2.rf24.NTL.only$x.values, y = ALE.2.rf24.NTL.only$f.values),
+              alpha = 0.5, color = "chocolate1", size  = 1) +
+    scale_x_continuous(name = "Logarithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Partial Dependency Profile") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.09, label = 'bold("b")', parse = TRUE, size = 5))
+
+(income.line.ale <- 
+    ggplot() +
+    geom_line(aes(x = ALE.2.rf24.income.only$x.values, y = ALE.2.rf24.income.only$f.values),
+              alpha = 0.5, color = "magenta3", size  = 1) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - Partial Dependency Profile") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.4, label = 'bold("c")', parse = TRUE, size = 5))
+
+jpeg(file = "04_Figure/09_ALE.jpeg", width = 297, height = 90, units = "mm", quality = 300, res = 300)
+grid.arrange(NDVI.line.ale, NTL.line.ale, income.line.ale,
+             nrow = 1)
+dev.off()
+
