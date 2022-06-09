@@ -7,6 +7,8 @@ library(tidyverse)
 library(ALEPlot)
 library(plotly)
 library(ggplot2)
+library(grid)
+library(gridExtra)
 
 findBestFitFunction <- function(input_pdp, highest_order = 20, decide_value = 0.99, weights = NULL){
   if (!is.null(weights)){
@@ -270,4 +272,87 @@ jpeg(file = "04_Figure/10_pseudoFun_ALE.jpeg", width = 297, height = 90,
      units = "mm", quality = 300, res = 300)
 grid.arrange(Fuction.NDVI.line.ale, Fuction.NTL.line.ale, Fuction.income.line.ale,
              nrow = 1)
+dev.off()
+
+#-------------descriptive statistics--------------
+Mean <- round(mean(dataset_used.rf$overall_LS), 2)
+SD <- round(sd(dataset_used.rf$overall_LS), 2)
+N = nrow(dataset_used.rf)
+grob <- grobTree(textGrob(paste0("Mean = ", Mean, "\nStd.dev = ", SD,"\nN = ", N),
+                          x = 0.75,  y = 0.90, hjust = 0,
+                          gp = gpar(col = "black", fontsize = 10)))
+grob_add <- grobTree(textGrob("a",
+                              x = 0.02,  y = 0.95, hjust = 0,
+                              gp = gpar(col = "black", fontsize = 20)))
+(a <- ggplot(dataset_used.rf) +
+    aes(x = overall_LS) +
+    xlim(0, 6) +
+    geom_histogram(colour = "black", fill = "white", bins = 5, binwidth = 1) +
+    xlab("LS Assessment") + 
+    ylab("Frequency") +
+    annotation_custom(grob) +
+    annotation_custom(grob_add) +
+    theme_bw())
+
+Mean <- round(mean(dataset_used.rf$NDVI), 2)
+SD <- round(sd(dataset_used.rf$NDVI), 2)
+N = nrow(dataset_used.rf)
+grob <- grobTree(textGrob(paste0("Mean = ", Mean, "\nStd.dev = ", SD,"\nN = ", N),
+                          x = 0.75,  y = 0.90, hjust = 0,
+                          gp = gpar(col = "black", fontsize = 10)))
+grob_add <- grobTree(textGrob("b",
+                              x = 0.02,  y = 0.95, hjust = 0,
+                              gp = gpar(col = "black", fontsize = 20)))
+(b <- ggplot(dataset_used.rf) +
+    aes(x = NDVI) +
+    #xlim(0, 6) +
+    geom_histogram(colour = "black", fill = "white", bins = 40, binwidth = 1) +
+    xlab("NDVI (%)") + 
+    ylab("Frequency") +
+    annotation_custom(grob) +
+    annotation_custom(grob_add) +
+    theme_bw())
+
+Mean <- round(mean(dataset_used.rf$NTL_log), 2)
+SD <- round(sd(dataset_used.rf$NTL_log), 2)
+N = nrow(dataset_used.rf)
+grob <- grobTree(textGrob(paste0("Mean = ", Mean, "\nStd.dev = ", SD,"\nN = ", N),
+                          x = 0.75,  y = 0.90, hjust = 0,
+                          gp = gpar(col = "black", fontsize = 10)))
+grob_add <- grobTree(textGrob("c",
+                              x = 0.02,  y = 0.95, hjust = 0,
+                              gp = gpar(col = "black", fontsize = 20)))
+(c <- ggplot(dataset_used.rf) +
+    aes(x = NTL_log) +
+    #xlim(0, 6) +
+    geom_histogram(colour = "black", fill = "white", bins = 40, binwidth = 0.1) +
+    xlab("Logarithm of NTL") + 
+    ylab("Frequency") +
+    annotation_custom(grob) +
+    annotation_custom(grob_add) +
+    theme_bw())
+
+Mean <- round(mean(dataset_used.rf$income_indiv), 2)
+SD <- round(sd(dataset_used.rf$income_indiv), 2)
+N = nrow(dataset_used.rf)
+grob <- grobTree(textGrob(paste0("Mean = ", Mean, "\nStd.dev = ", SD,"\nN = ", N),
+                          x = 0.75,  y = 0.90, hjust = 0,
+                          gp = gpar(col = "black", fontsize = 10)))
+grob_add <- grobTree(textGrob("d",
+                              x = 0.02,  y = 0.95, hjust = 0,
+                              gp = gpar(col = "black", fontsize = 20)))
+(d <- ggplot(dataset_used.rf) +
+    aes(x = income_indiv) +
+    #xlim(0, 6) +
+    geom_histogram(colour = "black", fill = "white", bins = 30, binwidth = 1) +
+    xlab("Annual Income (Million JPY)") + 
+    ylab("Frequency") +
+    annotation_custom(grob) +
+    annotation_custom(grob_add) +
+    theme_bw())
+
+jpeg(file="04_Figure\\11_descriptive_stat.jpeg", 
+     width = 297, height = 210, units = "mm", quality = 300, res = 300)
+grid.arrange(a, b, c, d,
+             nrow = 2)
 dev.off()
