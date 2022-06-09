@@ -127,6 +127,8 @@ p
 NDVI.line <- 
   ggplot(ale.dataframe, aes(x = NDVI, y = LS, group = NTL)) +
   geom_line(alpha = 0.05, size = 0.5) +
+  scale_x_continuous(name = "NDVI (%)") +
+  scale_y_continuous(name = "LS Prediction - Accumulated Local Effects") +
   theme_bw()
 jpeg(file="04_Figure/02_NDVI.line.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
 NDVI.line
@@ -144,6 +146,8 @@ dev.off()
 NTL.line <- 
   ggplot(ale.dataframe, aes(x = NTL, y = LS, group = NDVI)) +
   geom_line(alpha = 0.05, size = 0.5) +
+  scale_x_continuous(name = "Logarithm of NTL") +
+  scale_y_continuous(name = "LS Prediction - Accumulated Local Effects") +
   theme_bw()
 jpeg(file="04_Figure/04_NTL.line.jpeg", width = 297, height = 105, units = "mm", quality = 300, res = 300)
 NTL.line
