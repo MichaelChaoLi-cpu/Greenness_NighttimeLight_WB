@@ -9,6 +9,7 @@ library(plotly)
 library(ggplot2)
 library(grid)
 library(gridExtra)
+library(stargazer)
 
 findBestFitFunction <- function(input_pdp, highest_order = 20, decide_value = 0.99, weights = NULL){
   if (!is.null(weights)){
@@ -356,3 +357,25 @@ jpeg(file="04_Figure\\11_descriptive_stat.jpeg",
 grid.arrange(a, b, c, d,
              nrow = 2)
 dev.off()
+
+
+###### summary table
+load("01_Data/06_dataset.rf24.RData")
+stargazer(dataset_used.rf,  
+          title = "Table S1: Descriptive Statistics of Features", type = "text", no.space = T,
+          covariate.labels = c('LS','Safe Feeling of Living Environments',
+                               'Sense of Goodness for Living', 'Community Attachment',
+                               'Frequency of High-level Stress', 'Frequency of Low-level Stress',
+                               'Female Dummy (Gender)', "Age", "Self-reported Health",
+                               "Annually Individual Income (Million JPY)", "College without Diploma",
+                               "Bachelor Dummy", 'Master Dummy', "PhD Dummy",
+                               "NDVI (%)", "Logarithm of NTL", 
+                               'Student Dummy',
+                               'Worker Dummy', 'Company Owner Dummy',
+                               'Government Officer Dummy',
+                               'Self-employed Dummy', "Professional Job Dummy", 
+                               'Housewife Dummy', 'Retired Dummy',
+                               'Unemployed Dummy'
+          ),
+          out = '03_Results\\summary.html'
+)
