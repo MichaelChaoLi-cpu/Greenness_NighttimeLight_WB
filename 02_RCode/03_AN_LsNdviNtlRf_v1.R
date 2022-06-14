@@ -85,6 +85,11 @@ model_performance_data.rf.24
 plot(model_performance_data.rf.24)
 
 lm(overall_LS ~., data = dataset_used.rf) %>% summary()
+ols.test <- lm(overall_LS ~., data = dataset_used.rf)
+ols.test$residuals
+Metrics::rmse(ols.test$model$overall_LS, ols.test$model$overall_LS + ols.test$residuals)
+Metrics::mse(ols.test$model$overall_LS, ols.test$model$overall_LS + ols.test$residuals)
+Metrics::mae(ols.test$model$overall_LS, ols.test$model$overall_LS + ols.test$residuals)
 
 ### test the line
 ### Dataset Level Variable Profile as Partial Dependence or Accumulated Local Dependence Explanations
