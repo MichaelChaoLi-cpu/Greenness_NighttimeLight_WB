@@ -358,6 +358,41 @@ grid.arrange(a, b, c, d,
              nrow = 2)
 dev.off()
 
+### importance plot
+load("03_Results/01_explainer_data.rf.24.RData")
+data.rf.24_aps <- model_parts(explainer_data.rf.24, type = "raw")
+test <- data.rf.24_aps
+test <- test %>% 
+  mutate(
+    variable = ifelse(variable == "high_stress", "High-level Stress", variable),
+    variable = ifelse(variable == "income_indiv", "Individual Income", variable),
+    variable = ifelse(variable == "good_for_living", "Goodness for Living", variable),
+    variable = ifelse(variable == "community_attachment", "Community Attachment", variable),
+    variable = ifelse(variable == "self_reported_health", "Self-reported Health", variable),
+    variable = ifelse(variable == "age", "Age", variable),
+    variable = ifelse(variable == "NTL_log", "Logarithm of NTL", variable),
+    variable = ifelse(variable == "NDVI", "NDVI (%)", variable),
+    variable = ifelse(variable == "low_stress", "Low-level Stress", variable),
+    variable = ifelse(variable == "female", "Female Dummy", variable),
+    variable = ifelse(variable == "living_environment_satefy", "Safe Feeling of Living Environments", variable),
+    variable = ifelse(variable == "bachelor", "Bachelor Dummy", variable),
+    variable = ifelse(variable == "worker", "Worker Dummy", variable),
+    variable = ifelse(variable == "college_no_diploma", "College without Diploma Dummy", variable),
+    variable = ifelse(variable == "housewife", "Housewife Dummy", variable),
+    variable = ifelse(variable == "unemployed", "Unemployed Dummy", variable),
+    variable = ifelse(variable == "self_employed", "Self-employed Dummy", variable),
+    variable = ifelse(variable == "government_officer", "Government Officer Dummy", variable),
+    variable = ifelse(variable == "retired", "Retired Dummy", variable),
+    variable = ifelse(variable == "master", "Master Dummy", variable),
+    variable = ifelse(variable == "company_owner", "Company Owner Dummy", variable),
+    variable = ifelse(variable == "professional", "Professional Job Dummy", variable),
+    variable = ifelse(variable == "student", "Student Dummy", variable),
+    variable = ifelse(variable == "phd", "PhD Dummy", variable),
+    variable = ifelse(variable == "overall_LS", "LS", variable)
+  )
+jpeg(file="04_Figure/importance.jpeg", width = 297, height = 210, units = "mm", quality = 300, res = 300)
+plot(test, bar_width = 6, subtitle = "Results of the Random Forest")
+dev.off()
 
 ###### summary table
 load("01_Data/06_dataset.rf24.RData")
