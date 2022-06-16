@@ -371,7 +371,7 @@ test <- test %>%
     variable = ifelse(variable == "self_reported_health", "Self-reported Health", variable),
     variable = ifelse(variable == "age", "Age", variable),
     variable = ifelse(variable == "NTL_log", "Logarithm of NTL", variable),
-    variable = ifelse(variable == "NDVI", "NDVI (%)", variable),
+    variable = ifelse(variable == "NDVI", "NDVI", variable),
     variable = ifelse(variable == "low_stress", "Low-level Stress", variable),
     variable = ifelse(variable == "female", "Female Dummy", variable),
     variable = ifelse(variable == "living_environment_satefy", "Safe Feeling of Living Environments", variable),
@@ -393,6 +393,9 @@ test <- test %>%
 jpeg(file="04_Figure/importance.jpeg", width = 297, height = 210, units = "mm", quality = 300, res = 300)
 plot(test, bar_width = 6, subtitle = "Results of the Random Forest")
 dev.off()
+
+result <- plot(test, bar_width = 6, subtitle = "Results of the Random Forest")
+result$data %>% View()
 
 ###### summary table
 load("01_Data/06_dataset.rf24.RData")
