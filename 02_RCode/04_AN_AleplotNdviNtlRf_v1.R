@@ -214,3 +214,14 @@ ME.estimation.dataset.used <- ME.estimation.dataset.used %>%
   mutate(MRS.NDVI = ME.NDVI/ME.income,
          MRS.NTL = ME.NTL/ME.income)
 save(ME.estimation.dataset.used, file = "03_Results/07_MRS.result.NDVI.NTL.RData", version = 2)
+
+mean.NDVI <- ME.estimation.dataset.used$MRS.NDVI %>% mean()
+stderr.NDVI <- ME.estimation.dataset.used$MRS.NDVI %>% plotrix::std.error()
+mean.NDVI - 1.96 * stderr.NDVI
+mean.NDVI + 1.96 * stderr.NDVI
+
+mean.NTL <- ME.estimation.dataset.used$MRS.NTL %>% mean()
+stderr.NTL <- ME.estimation.dataset.used$MRS.NTL %>% plotrix::std.error()
+mean.NTL
+mean.NTL - 1.96 * stderr.NTL
+mean.NTL + 1.96 * stderr.NTL

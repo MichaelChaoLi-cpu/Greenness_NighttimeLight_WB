@@ -96,7 +96,7 @@ labels_brks <- c("< -1", "", "-0.6", "", "-0.2", "0",
 (MRS.NDVI <-
   tm_shape(bound, bbox = bound@bbox) +
   tm_polygons(col = 'GID_0', lwd = 0.01, alpha = .6, pal = "grey85", legend.show = F) +
-  tm_shape(coords.deleteNA) +
+  tm_shape(coords.dropLowCount) +
   tm_polygons(col = 'MRS.NDVI', pal = pal(11), auto.palette.mapping = FALSE,
           border.alpha = 0,  breaks = brks, style = 'cont', 
           legend.is.portrait = F, title = "The Monetary Value of NDVI (million JPY/1%)",
@@ -132,7 +132,7 @@ labels_brks <- c("< -1", "", "-0.6", "", "-0.2", "0",
 (MRS.NTL <-
   tm_shape(bound, bbox = bound@bbox) +
   tm_polygons(col = 'GID_0', lwd = 0.01, alpha = .6, pal = "grey85", legend.show = F) +
-  tm_shape(coords.deleteNA) +
+  tm_shape(coords.dropLowCount) +
   tm_polygons(col = 'MRS.NTL', pal = pal(11), auto.palette.mapping = FALSE,
               border.alpha = 0,  breaks = brks, style = 'cont', 
               legend.is.portrait = F, title = "The Monetary Value of NTL (million JPY/1 Unit)",

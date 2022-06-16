@@ -82,7 +82,11 @@ grid.data <- over(coords, MRS.result.sp[,"MRS.NDVI"], fn = mean)
 coords$MRS.NDVI <- grid.data$MRS.NDVI
 grid.data <- over(coords, MRS.result.sp[,"MRS.NTL"], fn = mean)
 coords$MRS.NTL <- grid.data$MRS.NTL
+MRS.result.sp$count <- 1
+grid.data <- over(coords, MRS.result.sp[,"count"], fn = sum)
+coords$count <- grid.data$count
 
 coords.deleteNA <- coords %>% filter(!is.na(MRS.NDVI))
+coords.dropLowCount <- coords.deleteNA %>% filter(count > 30)
 
-save(coords.deleteNA, file = "03_Results/09_coords.deleteNA.RData")
+save(coords.deleteNA, coords.dropLowCount, file = "03_Results/09_coords.deleteNA.RData")
