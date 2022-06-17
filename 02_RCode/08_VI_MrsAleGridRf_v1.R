@@ -129,11 +129,18 @@ coords.deleteNA$MRS.NTL %>% hist()
 brks = seq(-1, 1, 0.2)
 labels_brks <- c("< -1", "", "-0.6", "", "-0.2", "0",
                  "0.2", "", "0.6", "", "1")
+
+labels_brks <- c("< -0.1", "", "-0.06", "", "-0.02", "0",
+                 "0.2", "", "0.6", "", "1")
+coords.dropLowCount$MRS.NTL.dou.neg <- coords.dropLowCount$MRS.NTL
+coords.dropLowCount@data <- coords.dropLowCount@data %>%
+  mutate(MRS.NTL.dou.neg = ifelse(MRS.NTL.dou.neg<0, MRS.NTL.dou.neg*10, MRS.NTL.dou.neg))
+
 (MRS.NTL <-
   tm_shape(bound, bbox = bound@bbox) +
   tm_polygons(col = 'GID_0', lwd = 0.01, alpha = .6, pal = "grey85", legend.show = F) +
   tm_shape(coords.dropLowCount) +
-  tm_polygons(col = 'MRS.NTL', pal = pal(11), auto.palette.mapping = FALSE,
+  tm_polygons(col = 'MRS.NTL.dou.neg', pal = pal(11), auto.palette.mapping = FALSE,
               border.alpha = 0,  breaks = brks, style = 'cont', 
               legend.is.portrait = F, title = "The Monetary Value of NTL (million JPY/1 Unit)",
               labels = labels_brks, midpoint = 0) +
