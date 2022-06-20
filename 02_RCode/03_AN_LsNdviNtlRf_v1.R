@@ -1,5 +1,29 @@
 # Author: M.L.
 
+# input: 04_dataset_used.RData
+# 04_dataset_used.RData: "ID", the respondent id,
+#                        "post_code", this is postal code of respondents.
+#                        ...
+#                        "overall_LS", output variable.
+#                        "age", "high_stress", "low_stress", "easy_to_relax"
+#                        "good_for_living", "live_environment_satefy",
+#                        "community_attachment", "self_reported_health",
+#                        "female", "student", "worker", "company_owner", 
+#                        "government_officer", "self_employed", "professional",
+#                        "housewife", "retired", "unemployed",
+#                        "college_no_diploma", "bachelor", "master", "phd",
+#                        "income_indiv", "NDVI", "NTL" (24 features) 
+
+# output: 00_data.rf.24.RData
+# 00_data.rf.24.RData: the raw random forest model with 1000 trees.
+
+# output: 01_explainer_data.rf.24.RData
+# 01_explainer_data.rf.24.RData: the unified version of "00_data.rf.24.RData" by
+#                                "DALEX" package.
+
+# output: 05_data.rf.24.PDP.income.RData
+# 05_data.rf.24.PDP.income.RData: the pdp of "00_data.rf.24.RData".
+
 # end
 
 library(ggplot2)

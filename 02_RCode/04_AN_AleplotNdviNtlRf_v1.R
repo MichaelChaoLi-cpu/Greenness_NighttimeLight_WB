@@ -1,5 +1,33 @@
 # Author: M.L.
 
+# input: 04_dataset_used.RData
+# 04_dataset_used.RData: "ID", the respondent id,
+#                        "post_code", this is postal code of respondents.
+#                        ...
+#                        "overall_LS", output variable.
+#                        "age", "high_stress", "low_stress", "easy_to_relax"
+#                        "good_for_living", "live_environment_satefy",
+#                        "community_attachment", "self_reported_health",
+#                        "female", "student", "worker", "company_owner", 
+#                        "government_officer", "self_employed", "professional",
+#                        "housewife", "retired", "unemployed",
+#                        "college_no_diploma", "bachelor", "master", "phd",
+#                        "income_indiv", "NDVI", "NTL" (24 features) 
+
+# input: 00_data.rf.24.RData
+# 00_data.rf.24.RData: the raw random forest model with 1000 trees.
+
+# output: 06_ALE.2.rf24.NDVI.NTL.only.500.RData
+# 06_ALE.2.rf24.NDVI.NTL.only.500.RData: the ALE of NTL and NDVI with 500 
+#                                        intervals, (K = 500) 
+
+# output: 10_Pseudo.funciton.ALE.RData
+# 10_Pseudo.funciton.ALE.RData: PALEF of NTL (2-order), NDVI (20-order), and 
+#                               income (6-order)
+
+# output: 07_MRS.result.NDVI.NTL.RData
+# 07_MRS.result.NDVI.NTL.RData: Marginal substitue rate of NDVI and NTL
+
 # end
 
 library(randomForest)

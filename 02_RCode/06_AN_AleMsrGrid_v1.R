@@ -1,5 +1,36 @@
 # Author: M.L.
 
+# input: 04_dataset_used.RData
+# 04_dataset_used.RData: "ID", the respondent id,
+#                        "post_code", this is postal code of respondents.
+#                        ...
+#                        "overall_LS", output variable.
+#                        "age", "high_stress", "low_stress", "easy_to_relax"
+#                        "good_for_living", "live_environment_satefy",
+#                        "community_attachment", "self_reported_health",
+#                        "female", "student", "worker", "company_owner", 
+#                        "government_officer", "self_employed", "professional",
+#                        "housewife", "retired", "unemployed",
+#                        "college_no_diploma", "bachelor", "master", "phd",
+#                        "income_indiv", "NDVI", "NTL" (24 features)
+
+# input: 07_MRS.result.NDVI.NTL.RData
+# 07_MRS.result.NDVI.NTL.RData: Marginal substitue rate of NDVI and NTL
+
+# input: 05_spatial.post.id.RData
+# 05_spatial.post.id.RData: "post_code", this is postal code of respondents.
+# Note: this is spatial point data frame of "post_code"
+
+# output: 08_MRS.result.NDVI.NTL.with.loc.RData
+# 08_MRS.result.NDVI.NTL.with.loc.RData: MSR with location.
+
+# output: 09_coords.deleteNA.RData
+# 09_coords.deleteNA.RData: "id", this is grid id.
+#                           "MRS.NDVI": the gridded average value of monetary values
+#                                       of NDVI
+#                           "MRS.NTL": the gridded average value of monetary values
+#                                      of NTL
+
 # end
 
 library(randomForest)

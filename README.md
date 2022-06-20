@@ -21,12 +21,20 @@ Chao Li, Shunsuke Managi
 ## R Code  
 **[01_DW_DataWellBeingGreennessNTL_v1.R](02_RCode/01_DW_DataWellBeingGreennessNTL_v1.R)**: 
 This script creates the basic data set, with 24 features and 478,266 obvs.   
-**[03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R)**: .   
-**[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**:  .   
-**[05_VI_AleplotNdviNtlRf_v1.R](02_RCode/05_VI_AleplotNdviNtlRf_v1.R)**: .    
-**[06_AN_AleMsrGrid_v1.R](02_RCode/06_AN_AleMsrGrid_v1.R)**: .      
-**[SP_03_AN_LsNdviNtlRf_v1.R](02_RCode/SP_03_AN_LsNdviNtlRf_v1.R)**: .     
-**[SP_04_AN_AleplotNdviNtlRf_v1.R](02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R)**: .   
+**[03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R)**: this script is to 
+get random forest model.   
+**[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**: this script 
+esitmates the PALEF and monetary values of the features of interest.   
+**[05_VI_AleplotNdviNtlRf_v1.R](02_RCode/05_VI_AleplotNdviNtlRf_v1.R)**: this script
+is about visualization.    
+**[06_AN_AleMsrGrid_v1.R](02_RCode/06_AN_AleMsrGrid_v1.R)**: this script is to calculate
+gridded monetary values.    
+**[08_VI_MrsAleGridRf_v1.R](02_RCode/08_VI_MrsAleGridRf_v1.R)**: this script is
+about visualization.
+**[SP_03_AN_LsNdviNtlRf_v1.R](02_RCode/SP_03_AN_LsNdviNtlRf_v1.R)**: High-performance 
+computer version of [03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R).     
+**[SP_04_AN_AleplotNdviNtlRf_v1.R](02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R)**: 
+High-performance computer version of **[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**.   
 **NOTE:** This repo DOES NOT include the survey, due to the rights and responsibility of 
 the this Github Owner.
    

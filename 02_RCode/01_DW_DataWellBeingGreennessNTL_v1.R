@@ -32,7 +32,6 @@
 # Note: this is a process file.
 
 # output: 04_dataset_used.RData
-
 # 04_dataset_used.RData: "ID", the respondent id,
 #                        "post_code", this is postal code of respondents.
 #                        ...
