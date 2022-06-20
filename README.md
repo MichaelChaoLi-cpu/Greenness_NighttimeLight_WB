@@ -19,13 +19,16 @@ Chao Li, Shunsuke Managi
 [**Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges**](05_Manuscript/Manuscript.pdf)  
   
 ## R Code  
-**[01_DW_DataWellBeingGreennessNTL_v1.R](02_RCode/01_DW_DataWellBeingGreennessNTL_v1.R)**: .   
+**[01_DW_DataWellBeingGreennessNTL_v1.R](02_RCode/01_DW_DataWellBeingGreennessNTL_v1.R)**: 
+This script creates the basic data set, with 24 features and 478,266 obvs.   
 **[03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R)**: .   
 **[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**:  .   
 **[05_VI_AleplotNdviNtlRf_v1.R](02_RCode/05_VI_AleplotNdviNtlRf_v1.R)**: .    
 **[06_AN_AleMsrGrid_v1.R](02_RCode/06_AN_AleMsrGrid_v1.R)**: .      
 **[SP_03_AN_LsNdviNtlRf_v1.R](02_RCode/SP_03_AN_LsNdviNtlRf_v1.R)**: .     
 **[SP_04_AN_AleplotNdviNtlRf_v1.R](02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R)**: .   
+**NOTE:** This repo DOES NOT include the survey, due to the rights and responsibility of 
+the this Github Owner.
    
 ## Workflow
 **WF.A: 01 -> 03 -> 04 -> 05 -> 06 -> 08 -> END**   

@@ -1,6 +1,50 @@
 # Author: M.L.
 
+# output: 01_data_pool.RData
+# 01_data_pool.RData: raw data set from the survey. In this data set, the 
+#                     features of interest are renamed.
+# Note: this is a process file.
 
+# output: 02_NTLRasterDataset.RData
+# 02_NTLRasterDataset.RData: "post_code", this is postal code of respondents.
+#                            "NTL", represents NTL values of a single day
+#                            "year", the year of data
+#                            "month", the month of data
+# Note: this is a process file.
+
+# output: 02_NTLRasterDataset_ag.RData
+# 02_NTLRasterDataset_ag.RData: "post_code", this is postal code of respondents.
+#                               "NTL", represents annual average NTL values
+#                               "year", the year of data
+# Note: this is a process file.
+
+# output: 03_NDVIRasterDataset.RData
+# 03_NDVIRasterDataset.RData: "post_code", this is postal code of respondents.
+#                             "NDVI", represents NDVI values of a single day
+#                             "year", the year of data
+#                             "month", the month of data
+# Note: this is a process file.
+
+# output: 03_NDVIRasterDataset_ag.RData
+# 03_NDVIRasterDataset_ag.RData: "post_code", this is postal code of respondents.
+#                                "NDVI", represents annual average NTL values
+#                                "year", the year of data
+# Note: this is a process file.
+
+# output: 04_dataset_used.RData
+
+# 04_dataset_used.RData: "ID", the respondent id,
+#                        "post_code", this is postal code of respondents.
+#                        ...
+#                        "overall_LS", output variable.
+#                        "age", "high_stress", "low_stress", "easy_to_relax"
+#                        "good_for_living", "live_environment_satefy",
+#                        "community_attachment", "self_reported_health",
+#                        "female", "student", "worker", "company_owner", 
+#                        "government_officer", "self_employed", "professional",
+#                        "housewife", "retired", "unemployed",
+#                        "college_no_diploma", "bachelor", "master", "phd",
+#                        "income_indiv", "NDVI", "NTL" (24 features) 
 
 # end
 
