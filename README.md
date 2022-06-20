@@ -34,7 +34,7 @@ about visualization.
 **[SP_03_AN_LsNdviNtlRf_v1.R](02_RCode/SP_03_AN_LsNdviNtlRf_v1.R)**: High-performance 
 computer version of [03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R).     
 **[SP_04_AN_AleplotNdviNtlRf_v1.R](02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R)**: 
-High-performance computer version of **[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**.   
+High-performance computer version of [04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R).   
 **NOTE:** This repo DOES NOT include the survey, due to the rights and responsibility of 
 the this Github Owner.
    
@@ -51,4 +51,4 @@ the this Github Owner.
 - Email: Chao Li <chaoli0394@gmail.com>
   
 ## Term of Use:
-Authors/funders retain copyright (where applicable) of code on this Github repo. This GitHub repo and its contents herein, including data, link to data source, and analysis code that are intended solely for reproducing the results in the manuscript "Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges". The analyses rely upon publicly available data from multiple sources, that are often updated without advance notice. We hereby disclaim any and all representations and warranties with respect to the site, including accuracy, fitness for use, and merchantability. By using this site, its content, information, and software you agree to assume all risks associated with your use or transfer of information and/or software. You agree to hold the authors harmless from any claims relating to the use of this site.  
+Authors/funders retain copyright (where applicable) of code on this Github repo. This GitHub repo and its contents herein, including data, link to data source, and analysis code that are intended solely for reproducing the results in the manuscript **"Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges"**. The analyses rely upon publicly available data from multiple sources, that are often updated without advance notice. We hereby disclaim any and all representations and warranties with respect to the site, including accuracy, fitness for use, and merchantability. By using this site, its content, information, and software you agree to assume all risks associated with your use or transfer of information and/or software. You agree to hold the authors harmless from any claims relating to the use of this site.  
