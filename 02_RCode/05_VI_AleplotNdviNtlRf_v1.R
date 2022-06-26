@@ -419,3 +419,108 @@ stargazer(dataset_used.rf,
           ),
           out = '03_Results\\summary.html'
 )
+
+
+##### merge 08 09 10
+load("03_Results/03_data.rf.24.PDP.NDVI.RData")
+(NDVI.line.pdp <- 
+    ggplot(pdp.rf24.NDVI) +
+    geom_line( aes(x = V2, y = result), alpha = 0.5, color = "green3", size  = 1) +
+    scale_x_continuous(name = "NDVI (%)") +
+    scale_y_continuous(name = "LS Prediction - PDP") +
+    theme_bw() +
+    annotate("text", x = 6, y = 3.39, label = 'bold("a")', parse = TRUE, size = 5))
+
+
+load("03_Results/04_data.rf.24.PDP.NTL.RData")
+(NTL.line.pdp <- 
+    ggplot(pdp.rf24.NTL_log, aes(x = V2, y = result)) +
+    geom_line(alpha = 0.5, color = "chocolate1", size  = 1) +
+    scale_x_continuous(name = "Logarithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - PDP") +
+    theme_bw() +
+    annotate("text", x = 0, y = 3.42, label = 'bold("b")', parse = TRUE, size = 5))
+
+load("03_Results/05_data.rf.24.PDP.income.RData")
+(income.line.pdp <- 
+    ggplot(pdp.income.df, aes(x = V2, y = result)) +
+    geom_line(alpha = 0.5, color = "magenta3", size  = 1) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - PDP") +
+    theme_bw() +
+    annotate("text", x = 0, y = 3.7, label = 'bold("c")', parse = TRUE, size = 5))
+
+load("03_Results/06_ALE.2.rf24.NDVI.NTL.only.500.RData")
+(NDVI.line.ale <- 
+    ggplot() +
+    geom_line( aes(x = ALE.2.rf24.NDVI.only$x.values, y = ALE.2.rf24.NDVI.only$f.values),
+               alpha = 0.5, color = "green3", size  = 1) +
+    scale_x_continuous(name = "NDVI (%)") +
+    scale_y_continuous(name = "LS Prediction - ALE") +
+    theme_bw() +
+    annotate("text", x = 6, y = 0.06, label = 'bold("d")', parse = TRUE, size = 5))
+
+(NTL.line.ale <- 
+    ggplot() +
+    geom_line(aes(x = ALE.2.rf24.NTL.only$x.values, y = ALE.2.rf24.NTL.only$f.values),
+              alpha = 0.5, color = "chocolate1", size  = 1) +
+    scale_x_continuous(name = "Logarithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - ALE") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.09, label = 'bold("e")', parse = TRUE, size = 5))
+
+(income.line.ale <- 
+    ggplot() +
+    geom_line(aes(x = ALE.2.rf24.income.only$x.values, y = ALE.2.rf24.income.only$f.values),
+              alpha = 0.5, color = "magenta3", size  = 1) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - ALE") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.4, label = 'bold("f")', parse = TRUE, size = 5))
+
+load("03_Results/10_Pseudo.funciton.ALE.RData")
+(Fuction.NDVI.line.ale <- 
+    ggplot(pred.ALE.NDVI.only[[1]], aes(x = NDVI)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "green3",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "NDVI (%)") +
+    scale_y_continuous(name = "LS Prediction - PALEF") +
+    theme_bw() +
+    annotate("text", x = 6, y = 0.06, label = 'bold("g")', parse = TRUE, size = 5) +
+    annotate("text", x = 21, y = -0.075, label = 'bold("R2 = 98.15%")', parse = TRUE, size = 5))
+
+(Fuction.NTL.line.ale <- 
+    ggplot(pred.ALE.NTL.only[[1]], aes(x = NTL)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "chocolate1",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "Logarithm of NTL") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - PALEF") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.09, label = 'bold("h")', parse = TRUE, size = 5) +
+    annotate("text", x = 0.8, y = -0.25, label = 'bold("R2 = 99.27%")', parse = TRUE, size = 5))
+
+(Fuction.income.line.ale <- 
+    ggplot(pred.ALE.income.only[[1]], aes(x = income)) +
+    geom_line( aes(y = yhat), color = "grey77",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    geom_line( aes(y = yhat_pred), color = "magenta3",
+               alpha = 0.5, size  = 1, show.legend = F) +
+    scale_x_continuous(name = "Income (Million JPY)") +
+    scale_y_continuous(name = NULL) + # "LS Prediction - PALEF") +
+    theme_bw() +
+    annotate("text", x = 0, y = 0.4, label = 'bold("i")', parse = TRUE, size = 5) +
+    annotate("text", x = 25, y = -0.12, label = 'bold("R2 = 99.53%")', parse = TRUE, size = 5))
+
+jpeg(file = "04_Figure/13_mergedFigure.jpeg", width = 297, height = 210,
+     units = "mm", quality = 300, res = 300)
+grid.arrange(
+  NDVI.line.pdp, NTL.line.pdp, income.line.pdp,
+  NDVI.line.ale, NTL.line.ale, income.line.ale,
+  Fuction.NDVI.line.ale, Fuction.NTL.line.ale, Fuction.income.line.ale,
+  nrow = 3)
+dev.off()
+
