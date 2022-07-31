@@ -39,8 +39,10 @@ library(doSNOW)
 #library(pdp)
 
 
+### discarded 24  variable
+#load("/home/usr6/q70176a/DP15/01_Data/06_dataset.rf24.RData")
 
-load("/home/usr6/q70176a/DP15/01_Data/06_dataset.rf24.RData")
+load("/home/usr6/q70176a/DP15/01_Data/07_dataset.rf26.RData")
 
 #data.rf.24 <- randomForest(overall_LS ~., data = dataset_used.rf, na.action = na.omit, ntree = 1000, 
 #                           importance = T, mtry = 8)
@@ -49,20 +51,43 @@ Sys.time()
 cat("Here, Random forest \n")
 
 # do parallel
-run <- F
+#run <- F
+#if(run){
+#  cl <- makeSOCKcluster(100)
+#  registerDoSNOW(cl)
+#  getDoParWorkers()
+#  
+#  ntasks <- 10
+#  
+#  data.rf.24 <- 
+#    foreach(ntree = rep(100, ntasks), .combine = randomForest::combine,
+#            .multicombine=TRUE, .packages='randomForest') %dopar% {
+#              randomForest(overall_LS ~., data = dataset_used.rf, 
+#                           na.action = na.omit, ntree = ntree,
+#                           importance = T, mtry = 8)
+#            }
+#  stopCluster(cl)
+#  # do SNOW
+#  
+#  save(data.rf.24, file = "/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData", version = 2)
+#} else {
+#  load("/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData")
+#  Sys.time()
+#}
+run <- T
 if(run){
-  cl <- makeSOCKcluster(100)
+  cl <- makeSOCKcluster(125)
   registerDoSNOW(cl)
   getDoParWorkers()
   
-  ntasks <- 10
+  ntasks <- 8
   
-  data.rf.24 <- 
-    foreach(ntree = rep(100, ntasks), .combine = randomForest::combine,
+  data.rf.26 <- 
+    foreach(ntree = rep(125, ntasks), .combine = randomForest::combine,
             .multicombine=TRUE, .packages='randomForest') %dopar% {
-              randomForest(overall_LS ~., data = dataset_used.rf, 
+              randomForest(overall_LS ~., data = dataset_used.rf.26, 
                            na.action = na.omit, ntree = ntree,
-                           importance = T, mtry = 8)
+                           importance = T, mtry = 9)
             }
   stopCluster(cl)
   # do SNOW
@@ -72,6 +97,7 @@ if(run){
   load("/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData")
   Sys.time()
 }
+
 cat("Here, we have saved the rf model\n")
 
 cat("Here, we are, go to pdp\n")
