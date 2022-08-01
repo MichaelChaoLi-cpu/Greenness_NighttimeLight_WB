@@ -32,6 +32,21 @@
 
 # end
 
+'
+#!/bin/bash
+#PJM -L "rscunit=ito-a"
+#PJM -L "rscgrp=ito-m"
+#PJM -L "vnode=8"
+#PJM -L "vnode-core=36"
+#PJM -L "elapse=24:00:00"
+#PJM -j
+#PJM -X
+
+source init.sh
+
+R --slave --vanilla --args 10 20 < /home/usr6/q70176a/DP15/02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R
+'
+
 library(foreach)
 library(randomForest)
 library(tidyverse)
@@ -92,9 +107,9 @@ if(run){
   stopCluster(cl)
   # do SNOW
   
-  save(data.rf.24, file = "/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData", version = 2)
+  save(data.rf.26, file = "/home/usr6/q70176a/DP15/03_Results/00_data.rf.26.SP.RData", version = 2)
 } else {
-  load("/home/usr6/q70176a/DP15/03_Results/00_data.rf.24.SP.RData")
+  load("/home/usr6/q70176a/DP15/03_Results/00_data.rf.26.SP.RData")
   Sys.time()
 }
 
