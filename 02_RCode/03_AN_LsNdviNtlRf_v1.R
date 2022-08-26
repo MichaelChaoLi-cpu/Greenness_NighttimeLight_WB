@@ -13,6 +13,7 @@
 #                        "housewife", "retired", "unemployed",
 #                        "college_no_diploma", "bachelor", "master", "phd",
 #                        "income_indiv", "NDVI", "NTL" (24 features) 
+#                        "lon", "lat" (additional 2 features)
 
 # output: 00_data.rf.24.RData
 # 00_data.rf.24.RData: the raw random forest model with 1000 trees.
@@ -134,3 +135,9 @@ pdp.income.df <- pdp.income$data %>%
   dplyr::select("_x_", "_yhat_")
 colnames(pdp.income.df) <- c("V2", "result")
 save(pdp.income.df, file = "03_Results/05_data.rf.24.PDP.income.RData")
+
+#### aborted due to low speed of R, we will try to solve the Rmpi on hpc,
+#### before that, we will try to use. 
+
+load("01_Data/07_dataset.rf26.RData")
+dataset_used.rf.26 %>% write.csv(file = "F:\\15_Article\\98_PyResult\\dataset_used_rf_26.csv")
