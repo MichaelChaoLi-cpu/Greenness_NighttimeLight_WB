@@ -63,7 +63,7 @@ ntasks <- 20
 data.rf.26 <- 
   foreach(ntree = rep(clusterNumber, ntasks), .combine = randomForest::combine,
           .multicombine=TRUE, .packages='randomForest') %dopar% {
-            randomForest(overall_LS ~., data = dataset_used.rf, 
+            randomForest(overall_LS ~., data = dataset_used.rf.26, 
                          na.action = na.omit, ntree = ntree,
                          importance = T, mtry = 9)
           }
