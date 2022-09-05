@@ -31,7 +31,7 @@ if(notHave){
   counterfactualValueOfNTLforIncomeChange1 <-
     aggregateCounterfactual(X, data.rf.26, "income_indiv",marginalChange = 1,
                             0.01, "NTL_log", 1, 10^-3, 18)
-  save(counterfactualValueOfNDVIforIncomeChange1, file = "DP15/03_Results/97_temp_NTLCounterfactualValue.Rdata")
+  save(counterfactualValueOfNTLforIncomeChange1, file = "DP15/03_Results/97_temp_NTLCounterfactualValue.Rdata")
 }
 
 #counterfactualValueOfNDVIforIncomeChange1 <-
