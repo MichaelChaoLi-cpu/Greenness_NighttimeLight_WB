@@ -18,37 +18,45 @@ dataPre <- function(data){
 
 ### this function is to increase 1-unit income
 # since the income in this research is discrete.
+# y_inc with orderID
 rfPredictYchangeFeature <- function(dataRF, modelRF, incomeName, marginalChange){
   dataRF[,incomeName] <- dataRF[,incomeName] + marginalChange
   y_inc = predict(modelRF, newdata = dataRF)
-  return(y_inc)
+  df <- cbind(seq(1, length(y_inc), 1), y_inc)
+  colnames(df) <- c("orderID", "y_inc")
+  return(df)
 }
 
 ### this function find the reasonable FOI value to satisfy the counterfactural of income change
-singleCounterfactual <- function(singleDataRF, modelRF, aimY, tolerance, foiName,
-                                 foiChangeLimit, foiAccuracy){
-  lineNumber <- foiChangeLimit/foiAccuracy * 2 + 1
-  halfLineNumber <- foiChangeLimit/foiAccuracy
-  searchingDataRF <- singleDataRF[rep(1, lineNumber),]
-  changeValue <- seq(-foiChangeLimit, foiChangeLimit, foiAccuracy)
-  searchingDataRF[,foiName] <- searchingDataRF[,foiName] + changeValue
-  y_inc = predict(modelRF, newdata = searchingDataRF)
-  yChange <- abs(y_inc - aimY)
-  resultTable <- as.data.frame(cbind(seq(-halfLineNumber, halfLineNumber, 1), yChange))
-  resultTable <- resultTable[resultTable$yChange<0.1,]
-  if(nrow(resultTable) > 0){
-    resultTable$direction <- resultTable[,1]/abs(resultTable[,1])
-    resultTable[is.na(resultTable[,3]),3] <- 1
-    resultTable[,1] <- abs(resultTable[,1])
-    direction <- resultTable[resultTable[,1]==min(resultTable[,1]),3]
-    returnValue <- min(resultTable[,1]) * direction * foiAccuracy
-    if(length(returnValue)>1){
-      returnValue <- returnValue[1]
-    }
-  } else {
-    returnValue <- NA
-  }
-  return(returnValue)
+multiCounterfactual <- function(singleDataRF, modelRF, aimY, tolerance, foiName,
+                                foiChangeLimit, foiAccuracy, i){
+  i <- i - 1
+  positiveIncreaseFoiValue <- foiChangeLimit/foiAccuracy * i
+  rawDF <- singleDataRF
+  ### Positive
+  singleDataRF <- rawDF
+  singleDataRF[,foiName] <- singleDataRF[,foiName] + positiveIncreaseFoiValue
+  y_inc_new <- predict(modelRF, newdata = singleDataRF)
+  aimY_pos <- as.data.frame(cbind(aimY, y_inc_new))
+  aimY_pos$yes <- ifelse(abs(aimY_pos$y_inc - aimY_pos$y_inc_new) < tolerance, 1, 0)
+  aimY_pos <- aimY_pos[aimY_pos$yes == 1,]
+  aimY_pos <- aimY_pos["orderID"]
+  aimY_pos$incValue <- i
+  aimY_pos$pos <- 1
+  
+  ### Negative
+  singleDataRF <- rawDF
+  singleDataRF[,foiName] <- singleDataRF[,foiName] - positiveIncreaseFoiValue
+  y_inc_new <- predict(modelRF, newdata = singleDataRF)
+  aimY_neg <- as.data.frame(cbind(aimY, y_inc_new))
+  aimY_neg$yes <- ifelse(abs(aimY_neg$y_inc - aimY_neg$y_inc_new) < tolerance, 1, 0)
+  aimY_neg <- aimY_neg[aimY_neg$yes == 1,]
+  aimY_neg <- aimY_neg["orderID"]
+  aimY_neg$incValue <- i
+  aimY_neg$pos <- -1
+  
+  output <- rbind(aimY_pos, aimY_neg)
+  return(output)
 }
 
 progress_fun <- function(n){
@@ -64,14 +72,14 @@ aggregateCounterfactual <- function(dataRF, modelRF, incomeName, marginalChange,
                                     foiAccuracy, clusterNumber){
   y_inc <- rfPredictYchangeFeature(dataRF, modelRF, incomeName, marginalChange)
   cl <- makeSOCKcluster(clusterNumber)
-  clusterExport(cl, "singleCounterfactual")
+  clusterExport(cl, "multiCounterfactual")
   registerDoSNOW(cl)
   opts <- list(progress=progress_fun)
   df.ouput <-
-    foreach(i = seq(1,nrow(dataRF), 1), .combine = 'c', 
-            .packages='randomForest', .options.snow=opts) %dopar% {
-              singleCounterfactual(dataRF[i,], modelRF, y_inc[i], tolerance, 
-                                   foiName, foiChangeLimit, foiAccuracy)
+    foreach(i = seq(1,foiChangeLimit/foiAccuracy, 1), .combine = 'rbind', 
+            .packages=c('randomForest'), .options.snow=opts) %dopar% {
+              multiCounterfactual(dataRF, modelRF, y_inc, tolerance, 
+                                  foiName, foiChangeLimit, foiAccuracy, i)
             }
   stopCluster(cl)
   return(df.ouput)
