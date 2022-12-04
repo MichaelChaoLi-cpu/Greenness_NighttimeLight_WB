@@ -21,7 +21,7 @@ from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import GridSearchCV
 
 REPO_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/"
-REPO_RESULT_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/08_PyResults/"
+REPO_RESULT_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
 
 ### X and y
 dataset = pyreadr.read_r(REPO_LOCATION  + "01_Data/08_dataset.rf26.rds")
@@ -31,7 +31,8 @@ X = dataset.iloc[:, 1:27]
 y = np.array(dataset.iloc[:, 0:1].values.flatten(), dtype='float64')
 
 param_grid= {'max_features': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+                              21, 22, 23, 24, 25, 26, 27],
              'min_samples_split':[2, 5, 10, 15, 20, 25, 30, 35, 40]
              }
 base_estimator = RandomForestRegressor(oob_score=True, random_state=1,
@@ -44,3 +45,28 @@ search.cv_results_
 search.best_estimator_
 
 dump(search, REPO_RESULT_LOCATION + '01_hyperParaSearching.joblib')
+
+"""
+mat = search.cv_results_
+check_table = pd.DataFrame(np.array(
+    [mat["rank_test_score"], mat['param_max_features'],
+     mat['param_min_samples_split'], mat['mean_test_score'],
+     mat['std_test_score']
+     ]).T)
+
+param_grid= {'max_features': [1, 2, 3],
+             'min_samples_split':[2, 5, 10, 15, 20, 25, 30, 35, 40]
+             }
+base_estimator = RandomForestRegressor(oob_score=True, random_state=1,
+                                       n_estimators = 100, n_jobs=-1)
+search100 = GridSearchCV(base_estimator, param_grid, n_jobs=1, cv=10,
+                      verbose=50, scoring='r2')
+search100.fit(X, y)
+search100.best_estimator_
+mat = search100.cv_results_
+check_table = pd.DataFrame(np.array(
+    [mat["rank_test_score"], mat['param_max_features'],
+     mat['param_min_samples_split'], mat['mean_test_score'],
+     mat['std_test_score']
+     ]).T)
+"""

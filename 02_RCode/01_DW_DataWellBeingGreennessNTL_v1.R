@@ -45,6 +45,20 @@
 #                        "college_no_diploma", "bachelor", "master", "phd",
 #                        "income_indiv", "NDVI", "NTL" (24 features) 
 
+# output: 09_X_29IndVar.csv
+# 09_X_29IndVar.csv: "year", "lat", "lon","female", 
+#                    "age", "high_stress", "low_stress",
+#                    "easy_to_relax", "good_for_living", "live_environment_satefy",
+#                    "community_attachment", "income", "self_reported_health",
+#                    "student", "worker", "company_owner", 
+#                    "government_officer", "self_employed", 
+#                    "professional", "housewife", "retired", "unemployed",
+#                    "college_no_diploma", "bachelor", "master", "phd",
+#                    "income_indiv", "NDVI", "NTL" (29 features)
+
+# output: 10_y_29IndVar.csv
+# 10_y_29IndVar.csv: "overall_LS"
+
 # end
 
 library(tidyverse)
@@ -277,3 +291,55 @@ save(NDVIRasterDataset_ag, file = "01_Data/03_NDVIRasterDataset_ag.RData")
 dataset_used <- left_join(data_pool, NDVIRasterDataset_ag, by = c("post_code", "year"))
 dataset_used <- left_join(dataset_used, NTLRasterDataset_ag, by = c("post_code", "year"))
 save(dataset_used, file = "01_Data/04_dataset_used.RData")
+
+dataset_toXY <- dataset_used %>% dplyr::select("overall_LS","year", "lat", "lon","female", 
+                                               "age", "high_stress", "low_stress",
+                                               "easy_to_relax", "good_for_living", "live_environment_satefy",
+                                               "community_attachment", "income", "self_reported_health",
+                                               "student", "worker", "company_owner", 
+                                               "government_officer", "self_employed", 
+                                               "professional", "housewife", "retired", "unemployed",
+                                               "college_no_diploma", "bachelor", "master", "phd",
+                                               "income_indiv", "NDVI", "NTL"
+                                                ) %>% na.omit()
+dataset_toXY %>% dplyr::select(-"overall_LS") %>% write.csv(file = "01_Data/09_X_LSoverall_29IndVar.csv")
+dataset_toXY %>% dplyr::select("overall_LS") %>% write.csv(file = "01_Data/10_y_LSoverall_29IndVar.csv")
+
+dataset_toXY <- dataset_used %>% dplyr::select("overall_happiness","year", "lat", "lon","female", 
+                                               "age", "high_stress", "low_stress",
+                                               "easy_to_relax", "good_for_living", "live_environment_satefy",
+                                               "community_attachment", "income", "self_reported_health",
+                                               "student", "worker", "company_owner", 
+                                               "government_officer", "self_employed", 
+                                               "professional", "housewife", "retired", "unemployed",
+                                               "college_no_diploma", "bachelor", "master", "phd",
+                                               "income_indiv", "NDVI", "NTL"
+) %>% na.omit()
+dataset_toXY %>% dplyr::select(-"overall_happiness") %>% write.csv(file = "01_Data/11_X_Happinessoverall_29IndVar.csv")
+dataset_toXY %>% dplyr::select("overall_happiness") %>% write.csv(file = "01_Data/12_y_Happinessoverall.csv")
+
+dataset_toXY <- dataset_used %>% dplyr::select("relative_LS","year", "lat", "lon","female", 
+                                               "age", "high_stress", "low_stress",
+                                               "easy_to_relax", "good_for_living", "live_environment_satefy",
+                                               "community_attachment", "income", "self_reported_health",
+                                               "student", "worker", "company_owner", 
+                                               "government_officer", "self_employed", 
+                                               "professional", "housewife", "retired", "unemployed",
+                                               "college_no_diploma", "bachelor", "master", "phd",
+                                               "income_indiv", "NDVI", "NTL"
+) %>% na.omit()
+dataset_toXY %>% dplyr::select(-"relative_LS") %>% write.csv(file = "01_Data/13_X_LSrelative_29IndVar.csv")
+dataset_toXY %>% dplyr::select("relative_LS") %>% write.csv(file = "01_Data/14_y_LSrelative_29IndVar.csv")
+
+dataset_toXY <- dataset_used %>% dplyr::select("relative_happiness","year", "lat", "lon","female", 
+                                               "age", "high_stress", "low_stress",
+                                               "easy_to_relax", "good_for_living", "live_environment_satefy",
+                                               "community_attachment", "income", "self_reported_health",
+                                               "student", "worker", "company_owner", 
+                                               "government_officer", "self_employed", 
+                                               "professional", "housewife", "retired", "unemployed",
+                                               "college_no_diploma", "bachelor", "master", "phd",
+                                               "income_indiv", "NDVI", "NTL"
+) %>% na.omit()
+dataset_toXY %>% dplyr::select(-"relative_happiness") %>% write.csv(file = "01_Data/15_X_Happinessrelative_29IndVar.csv")
+dataset_toXY %>% dplyr::select("relative_happiness") %>% write.csv(file = "01_Data/16_y_Happinessrelative.csv")
