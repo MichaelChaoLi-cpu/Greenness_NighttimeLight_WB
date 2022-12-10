@@ -10,4 +10,6 @@
 01_Data/05_spatial.post.id.RData
 01_Data/06_dataset.rf24.RData
 01_Data/07_dataset.rf26.RData
+01_Data/*.rds
+01_Data/*.csv
 gadm36_JPN_1_sp.rds
