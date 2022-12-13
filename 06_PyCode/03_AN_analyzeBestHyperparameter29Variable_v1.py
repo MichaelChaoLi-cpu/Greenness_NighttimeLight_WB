@@ -21,10 +21,10 @@ def runLocallyOrRemotely():
     if locally_or_remotely == 'y':
         repo_location = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/"
         repo_result_location = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
-    else if locally_or_remotely == 'n':
+    elif locally_or_remotely == 'n':
         repo_location = "/home/usr6/q70176a/DP15/"
         repo_result_location = "/home/usr6/q70176a/DP15/03_Results/"
-    else if locally_or_remotely == 'wsl':
+    elif locally_or_remotely == 'wsl':
         repo_location = "/mnt/d/OneDrive - Kyushu University/15_Article/03_RStudio/"
         repo_result_location = "/mnt/d/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
     return repo_location, repo_result_location
