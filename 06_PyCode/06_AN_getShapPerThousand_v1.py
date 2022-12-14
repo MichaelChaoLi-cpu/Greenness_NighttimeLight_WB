@@ -23,6 +23,8 @@ from joblib import dump, load
 
 import sys
 
+from glob import glob
+
 def getShapCSV(Cu_Explainer, Variable_Of_Interest, kID=1):
     X_file_name = glob(REPO_LOCATION + "01_Data/*_X_" + Variable_Of_Interest + "*.csv")
     X = pd.read_csv(X_file_name[0], index_col=0)
