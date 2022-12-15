@@ -36,6 +36,7 @@ from joblib import dump
 import joblib
 
 from glob import glob
+from datetime import datetime
 
 def runLocallyOrRemotely(Locally_Or_Remotely):
     locally_or_remotely = Locally_Or_Remotely
@@ -88,7 +89,7 @@ def getImportance(model, X, y, Variable_Of_Interest):
     with joblib.parallel_backend("dask"):
         result = permutation_importance(model, X, y, n_repeats=10, 
                                         random_state=1, scoring = "r2")
-    dump(result, REPO_RESULT_LOCATION + "99_" + Variable_Of_Interest + "_RfImportance.joblib")
+    dump(result, REPO_RESULT_LOCATION + "98_" + Variable_Of_Interest + "_RfImportance.joblib")
     return None
 
 
@@ -99,7 +100,7 @@ LOG_START_TIME, FILE_FULL_NAME = initializeLogFile(LOG_NAME)
 
 dm.initialize(local_directory=os.getcwd(),  nthreads = 1, memory_limit = 0.1)
 CLIENT = Client()
-addRecordToLog(ClIENT)
+addRecordToLog(CLIENT)
 
 X, y = getXY("LSoverall")
 model = getModel(X, y, 7)
