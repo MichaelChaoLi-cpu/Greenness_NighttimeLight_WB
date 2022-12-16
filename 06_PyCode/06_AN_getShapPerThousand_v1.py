@@ -28,8 +28,8 @@ from glob import glob
 def getShapCSV(Cu_Explainer, Variable_Of_Interest, kID=1):
     X_file_name = glob(REPO_LOCATION + "01_Data/*_X_" + Variable_Of_Interest + "*.csv")
     X = pd.read_csv(X_file_name[0], index_col=0)
-    cu_shap_value_merge = Cu_Explainer.shap_values(X.iloc[(kID-1)*5000:kID*5000,:])
-    pd.DataFrame(cu_shap_value_merge).to_csv(REPO_RESULT_LOCATION + "shap_5thousand_" + str(kID) + ".csv")
+    cu_shap_value_merge = Cu_Explainer.shap_values(X.iloc[(kID-1)*1000:kID*1000,:])
+    pd.DataFrame(cu_shap_value_merge).to_csv(REPO_RESULT_LOCATION + "shap_thousand_" + str(kID) + ".csv")
     return None
 
 INPUT_PARAMETER_1 = sys.argv[1]

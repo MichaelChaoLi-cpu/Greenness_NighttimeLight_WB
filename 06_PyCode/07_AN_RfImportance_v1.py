@@ -20,7 +20,7 @@ NOTE:
 #PJM -X
 module use /home/exp/modulefiles
 module load gcc/10.2.0
-mpirun  -np 160 -ppn 10 -machinefile ${PJM_O_NODEINF}  -launcher-exec /bin/pjrsh python /home/usr6/q70176a/DP15/06_PyCode/07_AN_RfImportance_v1.py
+mpirun  -np 80 -ppn 5 -machinefile ${PJM_O_NODEINF}  -launcher-exec /bin/pjrsh python /home/usr6/q70176a/DP15/06_PyCode/07_AN_RfImportance_v1.py
 """
 
 import os
@@ -98,7 +98,7 @@ REPO_LOCATION, REPO_RESULT_LOCATION = runLocallyOrRemotely(Locally_Or_Remotely =
 LOG_NAME = "02_RfImportanceLog.txt"
 LOG_START_TIME, FILE_FULL_NAME = initializeLogFile(LOG_NAME)
 
-dm.initialize(local_directory=os.getcwd(),  nthreads = 1, memory_limit = 0.1)
+dm.initialize(local_directory=os.getcwd(),  nthreads = 1, memory_limit = 0.2)
 CLIENT = Client()
 addRecordToLog(CLIENT)
 
