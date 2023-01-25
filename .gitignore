@@ -14,3 +14,4 @@
 01_Data/*.csv
 gadm36_JPN_1_sp.rds
 07_PyResults/*.csv
+07_PyResults/
