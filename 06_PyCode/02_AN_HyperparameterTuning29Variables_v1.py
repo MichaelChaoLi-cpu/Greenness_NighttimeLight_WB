@@ -12,8 +12,8 @@ NOTE:
     
 #!/bin/bash
 #PJM -L "rscunit=ito-a"
-#PJM -L "rscgrp=ito-m"
-#PJM -L "vnode=16"
+#PJM -L "rscgrp=ito-s"
+#PJM -L "vnode=4"
 #PJM -L "vnode-core=36"
 #PJM -L "elapse=24:00:00"
 #PJM -j
@@ -21,7 +21,7 @@ NOTE:
 
 module use /home/exp/modulefiles
 module load gcc/10.2.0
-mpirun  -np 160 -ppn 10 -machinefile ${PJM_O_NODEINF}  -launcher-exec /bin/pjrsh python /home/usr6/q70176a/DP15/06_PyCode/02_AN_HyperparameterTuning29Variables_v1.py
+mpirun  -np 16 -ppn 4 -machinefile ${PJM_O_NODEINF}  -launcher-exec /bin/pjrsh python /home/usr6/q70176a/DP15/06_PyCode/02_AN_HyperparameterTuning29Variables_v1.py
 
 
 """
@@ -59,6 +59,58 @@ def addRecordToLog(Input_Element):
     f.close()
     return None
 
+# update 2023.1.30
+def getXandY(Output_Vari):
+    y = pd.read_csv(REPO_LOCATION + "01_Data/10_y_" + Output_Vari + "_29IndVar.csv", index_col=0)
+    y = y.iloc[:,0].to_numpy()
+    X = pd.read_csv(REPO_LOCATION + "01_Data/09_X_" + Output_Vari + "_29IndVar.csv", index_col=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, 
+                                                        random_state=1)
+    return X_train, X_test, y_train, y_test
+
+def findBestParameter(Max_Features, 
+                      X_train, X_test, y_train, y_test):    
+    base_estimator = RandomForestRegressor(n_estimators=1000, random_state=1,
+                                           n_jobs = -1, oob_score = True,
+                                           max_features = Max_Features) 
+    with joblib.parallel_backend('dask'): base_estimator.fit(X_train, y_train)
+    oob_score = base_estimator.oob_score_
+    test_score = base_estimator.score(X_test, y_test)
+    return [Max_Features, oob_score, test_score]
+
+def run(Output_Of_Interest):
+    addRecordToLog(Output_Of_Interest)
+    X_train, X_test, y_train, y_test = getXandY(Output_Of_Interest)
+    for Max_Features in list(range(1, 28)):
+        record = findBestParameter(Max_Features,
+                                   X_train, X_test,
+                                   y_train, y_test)
+        addRecordToLog(str(record) )
+    return None
+# update 2023.1.30
+
+REPO_LOCATION = "/home/usr6/q70176a/DP15/"
+REPO_RESULT_LOCATION = "/home/usr6/q70176a/DP15/03_Results/"
+
+LOG_NAME = "01_hyperTuningLog_9cv1.txt"
+LOG_START_TIME, FILE_FULL_NAME = initializeLogFile(LOG_NAME)
+
+dm.initialize(local_directory=os.getcwd(), nthreads = 1, memory_limit = 0.1)
+ClIENT = Client() 
+addRecordToLog(ClIENT)
+
+run("LSoverall")
+run("Happinessoverall")
+run("LSrelative")
+run("Happinessrelative")
+
+ClIENT.close()
+
+"""
+REPO_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/"
+REPO_RESULT_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
+
+### 2023.1.30
 def tuneHyperparameterLsOverall():
     y = pd.read_csv(REPO_LOCATION + "01_Data/10_y_LSoverall_29IndVar.csv", index_col=0)
     y = y.iloc[:,0].to_numpy()
@@ -142,27 +194,4 @@ def tuneHyperparameterHappinessRelative():
     dump(search, REPO_RESULT_LOCATION + '04_hyperTuningHappinessRelative.joblib')
     addRecordToLog("Save")
     return None
-
-REPO_LOCATION = "/home/usr6/q70176a/DP15/"
-REPO_RESULT_LOCATION = "/home/usr6/q70176a/DP15/03_Results/"
-
-LOG_NAME = "01_hyperTuningLog.txt"
-LOG_START_TIME, FILE_FULL_NAME = initializeLogFile(LOG_NAME)
-
-dm.initialize(local_directory=os.getcwd(), nthreads = 1, memory_limit = 0.1)
-ClIENT = Client() 
-addRecordToLog(ClIENT)
-
-tuneHyperparameterLsOverall()
-tuneHyperparameterHappinessOverall()
-tuneHyperparameterLsRelative()
-tuneHyperparameterHappinessRelative()
-
-ClIENT.close()
-
-"""
-REPO_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/"
-REPO_RESULT_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
-
-
 """
