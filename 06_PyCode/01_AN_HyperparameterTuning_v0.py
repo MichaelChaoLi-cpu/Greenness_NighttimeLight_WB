@@ -9,12 +9,15 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from datetime import datetime
 from sklearn.model_selection import train_test_split
+from glob import glob
 
 ### X and y
 def getXandY(Output_Vari):
-    y = pd.read_csv(REPO_LOCATION + "01_Data/10_y_" + Output_Vari + "_29IndVar.csv", index_col=0)
+    y_list = glob(REPO_LOCATION + "01_Data/*_y_" + Output_Vari + "*.csv")
+    y = pd.read_csv(y_list[0], index_col=0)
     y = y.iloc[:,0].to_numpy()
-    X = pd.read_csv(REPO_LOCATION + "01_Data/09_X_" + Output_Vari + "_29IndVar.csv", index_col=0)
+    X_list = glob(REPO_LOCATION + "01_Data/*_X_" + Output_Vari + "*.csv")
+    X = pd.read_csv(X_list[0], index_col=0)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, 
                                                         random_state=1)
     return X_train, X_test, y_train, y_test
