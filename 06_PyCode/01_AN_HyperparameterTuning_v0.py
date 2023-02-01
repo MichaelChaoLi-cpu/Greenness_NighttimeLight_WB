@@ -25,8 +25,10 @@ def getXandY(Output_Vari):
 def findBestParameter(Max_Features, 
                       X_train, X_test, y_train, y_test):    
     base_estimator = RandomForestRegressor(n_estimators=1000, random_state=1,
-                                           n_jobs = 6, oob_score = True,
-                                           max_features = Max_Features) 
+                                           n_jobs = 8, oob_score = True,
+                                           max_features = Max_Features,
+                                           min_samples_split=100)  
+    #min_samples_leaf=30
     base_estimator.fit(X_train, y_train)
     oob_score = base_estimator.oob_score_
     test_score = base_estimator.score(X_test, y_test)
@@ -63,7 +65,7 @@ def addRecordToLog(Input_Element):
 
 REPO_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/"
 REPO_RESULT_LOCATION = "D:/OneDrive - Kyushu University/15_Article/03_RStudio/07_PyResults/"
-LOG_NAME = "01_TuningLog.txt"
+LOG_NAME = "01_TuningLog_minSplit100.txt"
 
 createLog("YES")
 
