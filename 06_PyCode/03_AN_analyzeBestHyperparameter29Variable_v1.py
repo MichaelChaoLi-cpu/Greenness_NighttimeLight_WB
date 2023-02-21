@@ -51,10 +51,10 @@ Ls_Relative_Check_Table = makeHyperparameterTable("03_hyperTuningLsRelative.jobl
 Happiness_Relative_Check_Table = makeHyperparameterTable("04_hyperTuningHappinessRelative.joblib")
 
 """
-Ls_Overall_Check_Table: max_features - 7; min_samples_split - 100;
-Happiness_Overall_Check_Table: max_features - 7; min_samples_split - 100;
-Ls_Relative_Check_Table: max_features - 8; min_samples_split - 100;
-Happiness_Relative_Check_Table: max_features - 6; min_samples_split - 100;
+Ls_Overall_Check_Table: max_features - 7; min_samples_split - 100; 36.16%
+Happiness_Overall_Check_Table: max_features - 7; min_samples_split - 100; 29.25%
+Ls_Relative_Check_Table: max_features - 8; min_samples_split - 100; 35.26%
+Happiness_Relative_Check_Table: max_features - 6; min_samples_split - 100; 37.98%
 """
 
 
