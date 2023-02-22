@@ -118,47 +118,6 @@ def buildNeighborList(data, leftRightBoundary, upDownBoundary):
          index_select_array.append(index_select)
     return index_select_array
 
-def SpatialCoefficientBetweenLandCoverAndItsSHAP(variable_name, result, 
-                                                 neighborList):
-    coef_mat = joblib.Parallel(n_jobs=10)(
-        joblib.delayed(singleCoefficientBetweenLandCoverAndItsSHAP)(neighbors, variable_name, result)
-        for neighbors in neighborList)
-    coef_mat = pd.DataFrame(np.array(coef_mat))
-    coef_mat.columns = [variable_name+'_coef', variable_name+'_interc',
-                        variable_name+'_t_coef', variable_name+'_t_interc']
-    
-    return coef_mat
-
-def singleCoefficientBetweenLandCoverAndItsSHAP(neighbors, variable_name, result):
-    result_selected = result.iloc[neighbors,:]
-    result_selected = result_selected[[variable_name, variable_name+'_shap']]
-    X_data = result_selected[[variable_name]]
-    y = np.array(result_selected[[variable_name+'_shap']])
-    reg = LinearRegression().fit(X_data, y)
-    predictions = reg.predict(X_data)
-    newX = X_data
-    newX['Constant'] = 1
-    try:
-        MSE = (sum((y-predictions)**2))/(len(newX)-len(newX.columns))
-        var_b = MSE*(np.linalg.inv(np.dot(newX.T,newX)).diagonal())
-        sd_b = np.sqrt(var_b) 
-        t_coef = reg.coef_[0][0]/sd_b[0]
-        t_interc = reg.intercept_[0]/sd_b[1]
-    except:
-        t_coef=0
-        t_interc=0
-    coef = reg.coef_[0][0]
-    intercept = reg.intercept_[0]
-    #if t_coef > 1.64:
-    #    coef = reg.coef_[0][0]
-    #else:
-    #    coef = 0
-    #if t_interc > 1.64:
-    #    intercept = reg.intercept_[0]
-    #else:
-    #    intercept = 0
-    return [coef, intercept, t_coef, t_interc]
-
 def SpatialCoefficientBetweenLandCoverAndItsShapGw(variable_name, result, neighborList):
     coef_mat = joblib.Parallel(n_jobs=10)(
         joblib.delayed(singleCoefficientBetweenLandCoverAndItsShapGw)(neighbors, variable_name,
@@ -172,10 +131,10 @@ def SpatialCoefficientBetweenLandCoverAndItsShapGw(variable_name, result, neighb
 
 def singleCoefficientBetweenLandCoverAndItsShapGw(neighbors, variable_name, 
                                                   result, obs_count):
-    result_selected = result.iloc[neighbors,:]
+    result_selected = result.loc[neighbors,:]
     result_selected_location = result_selected[['lon', 'lat']]
-    result_itself_location = result_selected_location.loc[[obs_count],:]
-    distance_array = np.sqrt(np.array((result_selected_location.loc[:,'lon'] -  result_itself_location.iloc[0, 0])**2 + (result_selected_location.loc[:,'lat'] -  result_itself_location.iloc[0, 1])**2))
+    result_itself_location = result.iloc[[obs_count],:]
+    distance_array = np.sqrt(np.array((result_selected_location.loc[:,'lon'] -  result_itself_location.iloc[0, 2])**2 + (result_selected_location.loc[:,'lat'] -  result_itself_location.iloc[0, 1])**2))
     bandwidth = max(distance_array)
     print(obs_count, bandwidth)
     weights = (1 - (distance_array/bandwidth)**2)**2
@@ -183,7 +142,10 @@ def singleCoefficientBetweenLandCoverAndItsShapGw(neighbors, variable_name,
     result_selected = result_selected[[variable_name, variable_name+'_shap']]
     X_data = result_selected[[variable_name]]
     y = np.array(result_selected[[variable_name+'_shap']])
-    reg = LinearRegression().fit(X_data, y, sample_weight=weights)
+    try:
+        reg = LinearRegression().fit(X_data, y, sample_weight=weights)
+    except:
+        reg = LinearRegression().fit(X_data, y)
     predictions = reg.predict(X_data)
     newX = X_data
     newX['Constant'] = 1
@@ -220,6 +182,37 @@ dump(neighborList, REPO_RESULT_LOCATION + "07_neighborList.joblib")
 result = getMergeSHAPresult('LSoverall')
 NDVI_spatialcoefficient = SpatialCoefficientBetweenLandCoverAndItsShapGw('NDVI', result, neighborList)
 NTL_spatialcoefficient = SpatialCoefficientBetweenLandCoverAndItsShapGw('NTL', result, neighborList)
+dump(NDVI_spatialcoefficient, REPO_RESULT_LOCATION + "08_NDVI_spatialcoefficient.joblib")
+dump(NTL_spatialcoefficient, REPO_RESULT_LOCATION + "09_NTL_spatialcoefficient.joblib")
 
+"""
+from joblib import load
 
+leftRightBoundary = load(REPO_RESULT_LOCATION + "05_leftRightBoundary.joblib")
+upDownBoundary = load(REPO_RESULT_LOCATION + "06_upDownBoundary.joblib")
+neighborList = load(REPO_RESULT_LOCATION + "07_neighborList.joblib")
 
+# median
+def findBoundary(split_array, observation):
+    before_array = []
+    after_array = []
+    for split in split_array:
+        split_add = np.insert(split, 0, observation)
+        split_add = np.sort(split_add)
+        location = np.where(split_add == observation)[0][0]
+        if location == 0:
+            before = observation - 1
+        else:
+            before = split[location - 1]
+        if location == len(split_add)-1:
+            after = observation + 1
+        else:
+            after = split[location]
+        #before_array.append(before)
+        #after_array.append(after)
+        before_observation = np.median(np.array(before_array))
+        after_observation = np.median(np.array(after_array))
+    before_observation = np.min(np.array(before_array))
+    after_observation = np.max(np.array(after_array))
+    return [before_observation, after_observation]
+"""
