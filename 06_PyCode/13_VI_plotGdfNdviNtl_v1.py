@@ -58,3 +58,18 @@ fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
 gdf.plot(column='NTL_coef', cmap='RdBu_r', legend=True, markersize=1,
          ax = ax, vmin = -0.002, vmax = 0.002, alpha = 0.5)
 fig.savefig(REPO_FIGURE_LOCATION + "NTL_coef.jpg")
+
+fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
+gdf.plot(column='income_indiv_coef', cmap='Reds', legend=True, markersize=1,
+         ax = ax, vmin = 0, vmax = 0.02, alpha = 0.5)
+fig.savefig(REPO_FIGURE_LOCATION + "income_indiv_coef.jpg")
+
+fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
+gdf.plot(column='NDVI_MV', cmap='RdBu_r', legend=True, markersize=1,
+         ax = ax, vmin = -0.02, vmax = 0.02, alpha = 0.5)
+fig.savefig(REPO_FIGURE_LOCATION + "NDVI_MV.jpg")
+
+fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
+gdf.plot(column='NTL_MV', cmap='RdBu_r', legend=True, markersize=1,
+         ax = ax, vmin = -0.015, vmax = 0.015, alpha = 0.5)
+fig.savefig(REPO_FIGURE_LOCATION + "NTL_MV.jpg")

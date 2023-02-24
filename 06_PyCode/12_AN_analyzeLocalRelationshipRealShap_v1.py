@@ -246,11 +246,11 @@ def findBoundary(split_array, observation):
             after = observation + 1
         else:
             after = split[location]
-        #before_array.append(before)
-        #after_array.append(after)
-        before_observation = np.median(np.array(before_array))
-        after_observation = np.median(np.array(after_array))
-    before_observation = np.min(np.array(before_array))
-    after_observation = np.max(np.array(after_array))
+        before_array.append(before)
+        after_array.append(after)
+    before_observation = np.median(np.array(before_array))
+    after_observation = np.median(np.array(after_array))
+    #before_observation = np.min(np.array(before_array))
+    #after_observation = np.max(np.array(after_array))
     return [before_observation, after_observation]
 """
