@@ -113,12 +113,12 @@ getImportance(model, X, y, "Happinessoverall")
 addRecordToLog("Happinessoverall")
 
 X, y = getXY("LSrelative")
-model = getModel(X, y, 8)
+model = getModel(X, y, 7)
 getImportance(model, X, y, "LSrelative")
 addRecordToLog("LSrelative")
 
 X, y = getXY("Happinessrelative")
-model = getModel(X, y, 6)
+model = getModel(X, y, 7)
 getImportance(model, X, y, "Happinessrelative")
 addRecordToLog("Happinessrelative")
 
