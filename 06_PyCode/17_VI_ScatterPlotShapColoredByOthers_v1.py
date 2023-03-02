@@ -50,7 +50,9 @@ def plotScatterColoredByOther(Variable_Of_Interest, y_Lim, Other_Variable,
                            c = dataframe_OVLS[Other_Variable], cmap=CMAP,
                            alpha=0.2, marker='.', edgecolors='none')
     axs[0,0].set_ylim([-y_Lim, y_Lim])
-    #clb = plt.colorbar(axs[0,0], label=Bueatiful_Other_Name)
+    axs[0,0].text(0.01, 0.99, "a", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[0,0].transAxes,
+                  ha='left', va='top', fontweight='bold')
     axs[0,0].grid(linestyle='dashed')
     axs[0,0].set_xlabel(Variable_Of_Interest, fontsize=15)
     axs[0,0].set_ylabel(Variable_Of_Interest + " Shapley Value for OVLS", 
@@ -61,7 +63,9 @@ def plotScatterColoredByOther(Variable_Of_Interest, y_Lim, Other_Variable,
                            c = dataframe_RLS[Other_Variable], cmap=CMAP,
                            alpha=0.2, marker='.', edgecolors='none')
     axs[0,1].set_ylim([-y_Lim, y_Lim])
-    #clb = plt.colorbar(axs[0,1], label=Bueatiful_Other_Name)
+    axs[0,1].text(0.01, 0.99, "b", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[0,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
     axs[0,1].grid(linestyle='dashed')
     axs[0,1].set_xlabel(Variable_Of_Interest, fontsize=15)
     axs[0,1].set_ylabel(Variable_Of_Interest + " Shapley Value for RLS", 
@@ -72,7 +76,9 @@ def plotScatterColoredByOther(Variable_Of_Interest, y_Lim, Other_Variable,
                            c = dataframe_OH[Other_Variable], cmap=CMAP,
                            alpha=0.2, marker='.', edgecolors='none')
     axs[1,0].set_ylim([-y_Lim, y_Lim])
-    #clb = plt.colorbar(axs[1,0], label=Bueatiful_Other_Name)
+    axs[1,0].text(0.01, 0.99, "c", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,0].transAxes,
+                  ha='left', va='top', fontweight='bold')
     axs[1,0].grid(linestyle='dashed')
     axs[1,0].set_xlabel(Variable_Of_Interest, fontsize=15)
     axs[1,0].set_ylabel(Variable_Of_Interest + " Shapley Value for OH", 
@@ -83,7 +89,9 @@ def plotScatterColoredByOther(Variable_Of_Interest, y_Lim, Other_Variable,
                            c = dataframe_RH[Other_Variable], cmap=CMAP,
                            alpha=0.2, marker='.', edgecolors='none')
     axs[1,1].set_ylim([-y_Lim, y_Lim])
-    #clb = plt.colorbar(axs[1,1], label=Bueatiful_Other_Name)
+    axs[1,1].text(0.01, 0.99, "d", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
     axs[1,1].grid(linestyle='dashed')
     axs[1,1].set_xlabel(Variable_Of_Interest, fontsize=15)
     axs[1,1].set_ylabel(Variable_Of_Interest + " Shapley Value for RH", 
@@ -111,6 +119,10 @@ CMAP = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green","
 plotScatterColoredByOther('NDVI', 0.1, 'easy_to_relax', 'Easy to Relax')
 plotScatterColoredByOther('NDVI', 0.1, 'high_stress', 'Frequency of High-level Stress')
 plotScatterColoredByOther('NDVI', 0.1, 'low_stress', 'Frequency of Low-level Stress')
+
+plotScatterColoredByOther('NTL', 0.2, 'easy_to_relax', 'Easy to Relax')
+plotScatterColoredByOther('NTL', 0.2, 'high_stress', 'Frequency of High-level Stress')
+plotScatterColoredByOther('NTL', 0.2, 'low_stress', 'Frequency of Low-level Stress')
 
 
 

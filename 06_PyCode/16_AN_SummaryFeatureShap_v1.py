@@ -12,6 +12,7 @@ NOTE:
 """
 
 from glob import glob
+from joblib import load
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
@@ -57,6 +58,15 @@ def summaryFeatureShapReal(Variable_Of_Interest, Output_Variable):
     t_interc = reg.intercept_/sd_b[1]
     print(f"T coefficient: {t_coef:.3f}, T intercept: {t_interc:.3f}")
     return None
+
+def checkLocalModelAccuracy(Variable_Of_Interest, Output_Variable):
+    file_list = glob(REPO_RESULT_LOCATION +  "*" + Variable_Of_Interest + "_spatialcoefficient_" + Output_Variable +".joblib")
+    spatial_coefficient = load(file_list[0])
+    dataframe = pd.read_csv(REPO_RESULT_LOCATION + "00_mergedXSHAP_" + Output_Variable + ".csv", index_col = 0)
+    dataframe.reset_index(inplace=True)
+    y_pred = dataframe[Variable_Of_Interest] * spatial_coefficient[Variable_Of_Interest+'_coef'] + spatial_coefficient[Variable_Of_Interest+'_interc']
+    y = dataframe[Variable_Of_Interest + '_shap']
+    return r2_score(y.to_numpy(), y_pred.to_numpy())
     
 
 REPO_LOCATION, REPO_RESULT_LOCATION = runLocallyOrRemotely('y')
@@ -64,3 +74,18 @@ summaryFeatureShapReal('NDVI', 'LSoverall')
 summaryFeatureShapReal('NDVI', 'LSrelative')
 summaryFeatureShapReal('NDVI', 'Happinessoverall')
 summaryFeatureShapReal('NDVI', 'Happinessrelative')
+
+summaryFeatureShapReal('NTL', 'LSoverall')
+summaryFeatureShapReal('NTL', 'LSrelative')
+summaryFeatureShapReal('NTL', 'Happinessoverall')
+summaryFeatureShapReal('NTL', 'Happinessrelative')
+
+checkLocalModelAccuracy('NDVI', 'LSoverall')
+checkLocalModelAccuracy('NDVI', 'LSrelative')
+checkLocalModelAccuracy('NDVI', 'Happinessoverall')
+checkLocalModelAccuracy('NDVI', 'Happinessrelative')
+
+checkLocalModelAccuracy('NTL', 'LSoverall')
+checkLocalModelAccuracy('NTL', 'LSrelative')
+checkLocalModelAccuracy('NTL', 'Happinessoverall')
+checkLocalModelAccuracy('NTL', 'Happinessrelative')
