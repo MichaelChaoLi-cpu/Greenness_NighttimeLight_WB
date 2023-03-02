@@ -13,15 +13,15 @@ NOTE:
 for WSL
 """
 
-
-import pandas as pd
+from glob import glob 
+from math import sqrt
 import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
-from sklearn.ensemble import RandomForestRegressor
-from math import sqrt
 from sklearn.model_selection import cross_val_score
 
 def runLocallyOrRemotely(locally_or_remotely):
@@ -58,26 +58,21 @@ def getStatisticalIndicator(Variable_Of_Interest):
     model = LinearRegression()
     scores = cross_val_score(model, X, y, cv=10)
     lm_list = [r2_score(y, y_pred), sqrt(mean_squared_error(y, y_pred)), mean_absolute_error(y, y_pred), scores.mean()]
-    return rf_list, lm_list
+    return [rf_list, lm_list]
 
 REPO_LOCATION, REPO_RESULT_LOCATION = runLocallyOrRemotely('wsl')
-rf_list, lm_list = getStatisticalIndicator("LSoverall")
-print(rf_list)
-print(lm_list)
+OVLS_list = getStatisticalIndicator("LSoverall")
 
-rf_list, lm_list = getStatisticalIndicator("LSrelative")
-print(rf_list)
-print(lm_list)
+RLS_list = getStatisticalIndicator("LSrelative")
 
-rf_list, lm_list = getStatisticalIndicator("Happinessoverall")
-print(rf_list)
-print(lm_list)
+OH_list = getStatisticalIndicator("Happinessoverall")
 
-rf_list, lm_list = getStatisticalIndicator("Happinessrelative")
-print(rf_list)
-print(lm_list)
+RH_list = getStatisticalIndicator("Happinessrelative")
 
+Statistical_Indicator_Df = pd.concat([pd.DataFrame(OVLS_list), pd.DataFrame(RLS_list), 
+                                      pd.DataFrame(OH_list), pd.DataFrame(RH_list)])
 
-
+Statistical_Indicator_Df.columns = ['R2', 'RMSE', 'MAE', 'CV score']
+Statistical_Indicator_Df.to_csv(REPO_RESULT_LOCATION + "97_Statistical_Indicator_Df.csv")
 
 
