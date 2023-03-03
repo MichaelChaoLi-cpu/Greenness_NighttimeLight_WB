@@ -69,7 +69,7 @@ def checkLocalModelAccuracy(Variable_Of_Interest, Output_Variable):
     return r2_score(y.to_numpy(), y_pred.to_numpy())
     
 
-REPO_LOCATION, REPO_RESULT_LOCATION = runLocallyOrRemotely('y')
+REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 summaryFeatureShapReal('NDVI', 'LSoverall')
 summaryFeatureShapReal('NDVI', 'LSrelative')
 summaryFeatureShapReal('NDVI', 'Happinessoverall')

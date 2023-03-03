@@ -102,8 +102,10 @@ def findBoundary(split_array, observation):
         after_array.append(after)
     #before_observation = np.min(np.array(before_array))
     #after_observation = np.max(np.array(after_array))
-    before_observation = np.median(np.array(before_array))
-    after_observation = np.median(np.array(after_array))
+    #before_observation = np.median(np.array(before_array))
+    #after_observation = np.median(np.array(after_array))
+    before_observation = np.quantile(np.array(before_array), 0.75)
+    after_observation = np.quantile(np.array(after_array), 0.25)
     return [before_observation, after_observation]
 
 def buildNeighborList(data, leftRightBoundary, upDownBoundary):
