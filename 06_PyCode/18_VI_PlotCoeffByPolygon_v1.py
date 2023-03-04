@@ -45,7 +45,11 @@ def readGdfFromDisk():
     meshGDF.G04c_001 = meshGDF.G04c_001.astype('int64')
     meshGDF = meshGDF.set_index("G04c_001")
     meshGDF = meshGDF.set_crs(4326)
-    return japan_perfecture, meshGDF
+    meshPoly = gpd.read_file("G:/17_Article/01_Data/00_mesh/Mesh500/mergedPolyMesh500m.shp")
+    meshPoly.G04c_001 = meshPoly.G04c_001.astype('int64')
+    meshPoly = meshPoly.set_index("G04c_001")
+    meshPoly = meshPoly.set_crs(4326)
+    return japan_perfecture, meshGDF, meshPoly
 
 def getCoefGdf(Output_Variable):
     leftRightBoundary = load(REPO_RESULT_LOCATION + "05_leftRightBoundary_" + Output_Variable +".joblib")
@@ -54,10 +58,12 @@ def getCoefGdf(Output_Variable):
                                           index_col=0)
     NTL_spatialcoefficient = pd.read_csv(REPO_RESULT_LOCATION + "09_NTL_spatialcoefficient_" + Output_Variable +".csv",
                                          index_col=0)
+    income_spatialcoefficient = pd.read_csv(REPO_RESULT_LOCATION + "10_income_spatialcoefficient_" + Output_Variable + ".csv",
+                                            index_col=0)
     leftRightBoundary = pd.DataFrame(leftRightBoundary, columns=['left', 'right'])
     upDownBoundary = pd.DataFrame(upDownBoundary, columns=['bottom', 'top'])
     df = pd.concat([leftRightBoundary, upDownBoundary, NDVI_spatialcoefficient,
-                    NTL_spatialcoefficient], axis=1)
+                    NTL_spatialcoefficient, income_spatialcoefficient], axis=1)
     geometry = [box(x1, y1, x2, y2) for x1, y1, x2, y2 in zip(df.left, df.bottom,
                                                               df.right, df.top)]
     df = df.drop(['left', 'right', 'bottom', 'top'], axis=1)
@@ -66,22 +72,68 @@ def getCoefGdf(Output_Variable):
     return gdf
 
 
+def run(Output_Variable):
+    gdf = getCoefGdf(Output_Variable)
+    
+    NDVI_Coef_Point = []
+    
+    for i in list(range(8)):
+        MESHGDF_Single = MESHGDF.iloc[200000*i:200000*(1+i),:]
+        NDVI_Coef_Point_Single = gpd.sjoin(gdf, MESHGDF_Single, how="right", op="contains")
+        NDVI_Coef_Point_Single = NDVI_Coef_Point_Single[['NDVI_coef', 'NTL_coef', "income_indiv_coef"]]
+        NDVI_Coef_Point_Single = NDVI_Coef_Point_Single.reset_index()
+        NDVI_Coef_Point_Single = NDVI_Coef_Point_Single.groupby('G04c_001', as_index=False).mean()
+        NDVI_Coef_Point.append(NDVI_Coef_Point_Single)
+        print(f"now: {i}")
+    NDVI_Coef_Df = pd.concat(NDVI_Coef_Point, axis=0)
+    NDVI_Coef_Df.to_pickle(REPO_RESULT_LOCATION + "16_PointAverageCoef_" + Output_Variable + ".pkl")
+    NDVI_Coef_Df = NDVI_Coef_Df.set_index('G04c_001')
+    NDVI_Coef_Gdf = gpd.GeoDataFrame(pd.concat([NDVI_Coef_Df, MESHPOLY], axis=1))
+    
+    vmin = -0.0004
+    vmax = 0.0004
+    fig = plt.figure(figsize=(8, 8), dpi=1000)
+    ax = plt.axes()
+    JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='NDVI_coef', ax=ax, legend=True, cmap=CMAP, 
+             vmax = vmax, vmin = vmin)
+    plt.title("NDVI Coefficient (Output: " + Output_Variable + ")", loc = "left")
+    plt.grid(linestyle='dashed')
+    plt.xlim(126, 146)
+    plt.ylim(26,46)
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NDVI_coef_polygon_average_"+Output_Variable +".jpg",
+                dpi = 1000, bbox_inches='tight')
+    
+    vmin = -0.003
+    vmax = 0.003
+    fig = plt.figure(figsize=(8, 8), dpi=1000)
+    ax = plt.axes()
+    JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='NTL_coef', ax=ax, legend=True, cmap=CMAP, 
+             vmax = vmax, vmin = vmin)
+    plt.title("NTL Coefficient (Output: " + Output_Variable + ")", loc = "left")
+    plt.grid(linestyle='dashed')
+    plt.xlim(126, 146)
+    plt.ylim(26,46)
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NTL_coef_polygon_average_"+Output_Variable +".jpg",
+                dpi = 1000, bbox_inches='tight')
+    return None
 
 Output_Variable = 'LSoverall'
 REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 CMAP = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green", "white", "yellow","red"])
-JAPAN_PERFECTURE, MESHGDF = readGdfFromDisk()
-
-gdf = getCoefGdf(Output_Variable)
-
-MESHGDF_1 = MESHGDF.iloc[:200000,:]
-NDVI_Coef_Point_1 = gpd.sjoin(gdf, MESHGDF_1, how="right", op="contains")
-NDVI_Coef_Point_1 = NDVI_Coef_Point_1[['NDVI_coef', 'NTL_coef']]
-NDVI_Coef_Point_1 = NDVI_Coef_Point_1.reset_index()
-NDVI_Coef_Point_1 = NDVI_Coef_Point_1.groupby('G04c_001', as_index=False).mean()
+JAPAN_PERFECTURE, MESHGDF, MESHPOLY = readGdfFromDisk()
+run('LSoverall')
+run("LSrelative")
+run("Happinessoverall")
+run("Happinessrelative")
 
 
-
+"""
 fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
 JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
 JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
@@ -91,3 +143,6 @@ plt.grid(linestyle='dashed')
 plt.xlim(126, 146)
 plt.ylim(26,46)
 fig.savefig(REPO_FIGURE_LOCATION + "NDVI_poly_coef.jpg", bbox_inches='tight')
+"""
+
+
