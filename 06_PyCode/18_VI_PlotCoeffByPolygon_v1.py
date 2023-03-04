@@ -74,7 +74,13 @@ JAPAN_PERFECTURE, MESHGDF = readGdfFromDisk()
 
 gdf = getCoefGdf(Output_Variable)
 
-NDVI_Coef_Point = gpd.sjoin(gdf, MESHGDF, how="right", op="contains")
+MESHGDF_1 = MESHGDF.iloc[:200000,:]
+NDVI_Coef_Point_1 = gpd.sjoin(gdf, MESHGDF_1, how="right", op="contains")
+NDVI_Coef_Point_1 = NDVI_Coef_Point_1[['NDVI_coef', 'NTL_coef']]
+NDVI_Coef_Point_1 = NDVI_Coef_Point_1.reset_index()
+NDVI_Coef_Point_1 = NDVI_Coef_Point_1.groupby('G04c_001', as_index=False).mean()
+
+
 
 fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
 JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
