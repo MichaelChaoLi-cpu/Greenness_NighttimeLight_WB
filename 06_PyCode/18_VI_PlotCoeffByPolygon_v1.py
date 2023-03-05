@@ -15,6 +15,7 @@ import geopandas as gpd
 from joblib import load
 import matplotlib.colors
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from shapely.geometry import box
 
@@ -87,8 +88,21 @@ def run(Output_Variable):
         print(f"now: {i}")
     NDVI_Coef_Df = pd.concat(NDVI_Coef_Point, axis=0)
     NDVI_Coef_Df.to_pickle(REPO_RESULT_LOCATION + "16_PointAverageCoef_" + Output_Variable + ".pkl")
+    return None
+
+def getGdf(Output_Variable, MESHPOLY):
+    gdf = getCoefGdf(Output_Variable)
+    NDVI_Coef_Df = pd.read_pickle(REPO_RESULT_LOCATION + "16_PointAverageCoef_" + Output_Variable + ".pkl")
     NDVI_Coef_Df = NDVI_Coef_Df.set_index('G04c_001')
     NDVI_Coef_Gdf = gpd.GeoDataFrame(pd.concat([NDVI_Coef_Df, MESHPOLY], axis=1))
+    return NDVI_Coef_Gdf
+
+def plotOverlapCoeff(NDVI_Coef_Gdf, Output_Label):
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef']
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef']
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
     
     vmin = -0.0004
     vmax = 0.0004
@@ -98,7 +112,7 @@ def run(Output_Variable):
     JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
     NDVI_Coef_Gdf.plot(column='NDVI_coef', ax=ax, legend=True, cmap=CMAP, 
              vmax = vmax, vmin = vmin)
-    plt.title("NDVI Coefficient (Output: " + Output_Variable + ")", loc = "left")
+    plt.title("NDVI Coefficient (Output: " + Output_Label + ")", loc = "left")
     plt.grid(linestyle='dashed')
     plt.xlim(126, 146)
     plt.ylim(26,46)
@@ -114,12 +128,62 @@ def run(Output_Variable):
     JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
     NDVI_Coef_Gdf.plot(column='NTL_coef', ax=ax, legend=True, cmap=CMAP, 
              vmax = vmax, vmin = vmin)
-    plt.title("NTL Coefficient (Output: " + Output_Variable + ")", loc = "left")
+    plt.title("NTL Coefficient (Output: " + Output_Label + ")", loc = "left")
     plt.grid(linestyle='dashed')
     plt.xlim(126, 146)
     plt.ylim(26,46)
     plt.show();
     fig.savefig(REPO_FIGURE_LOCATION + "NTL_coef_polygon_average_"+Output_Variable +".jpg",
+                dpi = 1000, bbox_inches='tight')
+    
+    vmin = -0.018
+    vmax = 0.018
+    fig = plt.figure(figsize=(8, 8), dpi=1000)
+    ax = plt.axes()
+    JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='income_indiv_coef', ax=ax, legend=True, cmap=CMAP, 
+             vmax = vmax, vmin = vmin)
+    plt.title("Income Coefficient (Output: " + Output_Label + ")", loc = "left")
+    plt.grid(linestyle='dashed')
+    plt.xlim(126, 146)
+    plt.ylim(26,46)
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "Income_coef_polygon_average_"+Output_Variable +".jpg",
+                dpi = 1000, bbox_inches='tight')
+    
+    cmap_mv_ndvi = matplotlib.colors.LinearSegmentedColormap.from_list("", ["white", "yellow","red"])
+    vmin = 0.012
+    vmax = 0.025
+    fig = plt.figure(figsize=(8, 8), dpi=1000)
+    ax = plt.axes()
+    JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=ax, legend=True, cmap=cmap_mv_ndvi , 
+             vmax = vmax, vmin = vmin)
+    plt.title("Monetary Value of NDVI (Output: " + Output_Label + ")", loc = "left")
+    plt.grid(linestyle='dashed')
+    plt.xlim(126, 146)
+    plt.ylim(26,46)
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NDVI_mv_polygon_average_"+Output_Variable +".jpg",
+                dpi = 1000, bbox_inches='tight')
+    
+    cmap_mv_ntl = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green", "white"])
+    vmin = -0.160
+    vmax = -0.080
+    fig = plt.figure(figsize=(8, 8), dpi=1000)
+    ax = plt.axes()
+    JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=ax, legend=True, cmap=cmap_mv_ntl, 
+             vmax = vmax, vmin = vmin)
+    plt.title("Monetary Value of NTL (Output: " + Output_Label + ")", loc = "left")
+    plt.grid(linestyle='dashed')
+    plt.xlim(126, 146)
+    plt.ylim(26,46)
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NTL_mv_polygon_average_"+Output_Variable +".jpg",
                 dpi = 1000, bbox_inches='tight')
     return None
 
@@ -127,10 +191,11 @@ Output_Variable = 'LSoverall'
 REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 CMAP = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green", "white", "yellow","red"])
 JAPAN_PERFECTURE, MESHGDF, MESHPOLY = readGdfFromDisk()
-run('LSoverall')
-run("LSrelative")
-run("Happinessoverall")
-run("Happinessrelative")
+#run('LSoverall')
+#run("LSrelative")
+#run("Happinessoverall")
+#run("Happinessrelative")
+NDVI_Coef_Gdf_OVLS = getGdf('LSoverall', MESHPOLY)
 
 
 """
