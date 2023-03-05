@@ -68,6 +68,14 @@ def checkLocalModelAccuracy(Variable_Of_Interest, Output_Variable):
     y = dataframe[Variable_Of_Interest + '_shap']
     return r2_score(y.to_numpy(), y_pred.to_numpy())
     
+def checkLocalModelAccuracyIncome(Variable_Of_Interest, Output_Variable):
+    file_list = glob(REPO_RESULT_LOCATION +  "*" + Variable_Of_Interest + "_spatialcoefficient_" + Output_Variable +".joblib")
+    spatial_coefficient = load(file_list[0])
+    dataframe = pd.read_csv(REPO_RESULT_LOCATION + "00_mergedXSHAP_" + Output_Variable + ".csv", index_col = 0)
+    dataframe.reset_index(inplace=True)
+    y_pred = dataframe[Variable_Of_Interest+'_indiv'] * spatial_coefficient[Variable_Of_Interest+'_indiv'+'_coef'] + spatial_coefficient[Variable_Of_Interest+'_indiv'+'_interc']
+    y = dataframe[Variable_Of_Interest+'_indiv' + '_shap']
+    return r2_score(y.to_numpy(), y_pred.to_numpy())
 
 REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 summaryFeatureShapReal('NDVI', 'LSoverall')
@@ -80,6 +88,11 @@ summaryFeatureShapReal('NTL', 'LSrelative')
 summaryFeatureShapReal('NTL', 'Happinessoverall')
 summaryFeatureShapReal('NTL', 'Happinessrelative')
 
+summaryFeatureShapReal('income_indiv', 'LSoverall')
+summaryFeatureShapReal('income_indiv', 'LSrelative')
+summaryFeatureShapReal('income_indiv', 'Happinessoverall')
+summaryFeatureShapReal('income_indiv', 'Happinessrelative')
+
 print(checkLocalModelAccuracy('NDVI', 'LSoverall'))
 print(checkLocalModelAccuracy('NDVI', 'LSrelative'))
 print(checkLocalModelAccuracy('NDVI', 'Happinessoverall'))
@@ -89,6 +102,11 @@ print(checkLocalModelAccuracy('NTL', 'LSoverall'))
 print(checkLocalModelAccuracy('NTL', 'LSrelative'))
 print(checkLocalModelAccuracy('NTL', 'Happinessoverall'))
 print(checkLocalModelAccuracy('NTL', 'Happinessrelative'))
+
+print(checkLocalModelAccuracyIncome('income', 'LSoverall'))
+print(checkLocalModelAccuracyIncome('income', 'LSrelative'))
+print(checkLocalModelAccuracyIncome('income', 'Happinessoverall'))
+print(checkLocalModelAccuracyIncome('income', 'Happinessrelative'))
 
 """
 def checkLocalModelAccuracy(Variable_Of_Interest, Output_Variable):

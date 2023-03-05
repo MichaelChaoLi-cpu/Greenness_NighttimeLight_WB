@@ -97,7 +97,8 @@ def getGdf(Output_Variable, MESHPOLY):
     NDVI_Coef_Gdf = gpd.GeoDataFrame(pd.concat([NDVI_Coef_Df, MESHPOLY], axis=1))
     return NDVI_Coef_Gdf
 
-def plotOverlapCoeff(NDVI_Coef_Gdf, Output_Label):
+def plotOverlapCoeff(Output_Variable, Output_Label, MESHPOLY):
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
     ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
                         "Happinessoverall":"OH", "Happinessrelative":"RH"}
     NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef']
@@ -195,8 +196,7 @@ JAPAN_PERFECTURE, MESHGDF, MESHPOLY = readGdfFromDisk()
 #run("LSrelative")
 #run("Happinessoverall")
 #run("Happinessrelative")
-NDVI_Coef_Gdf_OVLS = getGdf('LSoverall', MESHPOLY)
-
+plotOverlapCoeff('LSoverall', 'OVLS', MESHPOLY)
 
 """
 fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
