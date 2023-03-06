@@ -101,8 +101,8 @@ def plotOverlapCoeff(Output_Variable, Output_Label, MESHPOLY):
     NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
     ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
                         "Happinessoverall":"OH", "Happinessrelative":"RH"}
-    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef']
-    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef']
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
     NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
     
     vmin = -0.0004
@@ -153,14 +153,13 @@ def plotOverlapCoeff(Output_Variable, Output_Label, MESHPOLY):
     fig.savefig(REPO_FIGURE_LOCATION + "Income_coef_polygon_average_"+Output_Variable +".jpg",
                 dpi = 1000, bbox_inches='tight')
     
-    cmap_mv_ndvi = matplotlib.colors.LinearSegmentedColormap.from_list("", ["white", "yellow","red"])
-    vmin = 0.012
-    vmax = 0.025
+    vmin = -250
+    vmax = 250
     fig = plt.figure(figsize=(8, 8), dpi=1000)
     ax = plt.axes()
     JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
     JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
-    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=ax, legend=True, cmap=cmap_mv_ndvi , 
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=ax, legend=True, cmap=CMAP , 
              vmax = vmax, vmin = vmin)
     plt.title("Monetary Value of NDVI (Output: " + Output_Label + ")", loc = "left")
     plt.grid(linestyle='dashed')
@@ -170,14 +169,13 @@ def plotOverlapCoeff(Output_Variable, Output_Label, MESHPOLY):
     fig.savefig(REPO_FIGURE_LOCATION + "NDVI_mv_polygon_average_"+Output_Variable +".jpg",
                 dpi = 1000, bbox_inches='tight')
     
-    cmap_mv_ntl = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green", "white"])
-    vmin = -0.160
-    vmax = -0.080
+    vmin = -1500
+    vmax = 1500
     fig = plt.figure(figsize=(8, 8), dpi=1000)
     ax = plt.axes()
     JAPAN_PERFECTURE.plot(ax=ax, color='#F6F6F6', alpha = 0.5)
     JAPAN_PERFECTURE.boundary.plot(ax=ax, edgecolor='black', alpha = 0.5, linewidth=0.1)
-    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=ax, legend=True, cmap=cmap_mv_ntl, 
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=ax, legend=True, cmap=CMAP, 
              vmax = vmax, vmin = vmin)
     plt.title("Monetary Value of NTL (Output: " + Output_Label + ")", loc = "left")
     plt.grid(linestyle='dashed')
@@ -197,6 +195,9 @@ JAPAN_PERFECTURE, MESHGDF, MESHPOLY = readGdfFromDisk()
 #run("Happinessoverall")
 #run("Happinessrelative")
 plotOverlapCoeff('LSoverall', 'OVLS', MESHPOLY)
+plotOverlapCoeff('LSrelative', 'RLS', MESHPOLY)
+plotOverlapCoeff('Happinessoverall', 'OH', MESHPOLY)
+plotOverlapCoeff('Happinessrelative', 'RH', MESHPOLY)
 
 """
 fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
