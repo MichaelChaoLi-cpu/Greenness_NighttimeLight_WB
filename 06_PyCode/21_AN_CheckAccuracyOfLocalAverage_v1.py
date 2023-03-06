@@ -105,6 +105,22 @@ def getCoefOnPoint(Output_Variable):
     print("income_indiv R2:", r2_score(test_df["income_indiv_shap"], test_df["income_indiv_shap_pred"] ))
     return None
 
+def getMvInformation(Output_Variable):
+    NDVI_Coef_Df = pd.read_pickle(REPO_RESULT_LOCATION + "17_DatasetLocationAverageCoef_" + Output_Variable + ".pkl")
+    point_location = getGdfOfRawData(Output_Variable)
+    test_df = pd.concat([NDVI_Coef_Df, point_location.reset_index()], axis=1)
+    test_df['MV_NDVI'] = test_df['NDVI_coef'] / test_df['income_indiv_coef'] * 1000000 / 121.0458
+    test_df['MV_NTL'] = test_df['NTL_coef'] / test_df['income_indiv_coef'] * 1000000 / 121.0458
+    test_df['MV_NDVI'].replace([np.inf, -np.inf], np.nan, inplace=True)
+    test_df['MV_NTL'].replace([np.inf, -np.inf], np.nan, inplace=True)
+    mean_NDVI = np.nanmean(test_df['MV_NDVI']) 
+    SE_NDVI = np.std(test_df['MV_NDVI'], ddof=1) / np.sqrt(np.size(test_df['MV_NDVI']))
+    mean_NTL = np.nanmean(test_df['MV_NTL']) 
+    SE_NTL = np.std(test_df['MV_NTL'], ddof=1) / np.sqrt(np.size(test_df['MV_NTL']))
+    print(f'NDVI mean {mean_NDVI:.2f}, 95%CI:{mean_NDVI-1.96*SE_NDVI:.2f} - {mean_NDVI+1.96*SE_NDVI:.2f}')
+    print(f'NTL mean {mean_NTL:.2f}, 95%CI:{mean_NTL-1.96*SE_NTL:.2f} - {mean_NTL+1.96*SE_NTL:.2f}')
+    return None
+
 Output_Variable = 'LSoverall'
 REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 getCoefOnPoint('LSoverall')
@@ -112,6 +128,8 @@ getCoefOnPoint('LSrelative')
 getCoefOnPoint('Happinessoverall')
 getCoefOnPoint('Happinessrelative')
 
-
-
+getMvInformation('LSoverall')
+getMvInformation('LSrelative')
+getMvInformation('Happinessoverall')
+getMvInformation('Happinessrelative')
 
