@@ -1,42 +1,30 @@
-# Greenness and Nighttime Light Positively Affect Human Well-being  
-# -	An Empirical Machine Learning Analysis (DP15)    
+# Greenness, Nighttime Light, and Human Well-being
+# -	Complex Nexuses Probed by Machines (DP15)    
   
-The positive effects of greenness in living environments on human well-being are known. As a widely used proxy, the nighttime light (NTL) indicates the regional socio-economic status and development level. Higher development levels and economic status are related to more opportunity and higher income, ultimately leading to greater human well-being. However, whether simple increases in greenness and NTL always produce positive results remains inconclusive. Here, we demonstrate the complex relationships between human well-being and greenness and NTL by employing the random forest method. The accuracy of this model is 81.83%, exceeding most previous studies. According to the analysis results, the recommended ranges of greenness and NTL in living environments are 10.91% - 32.99% and 0 – 17.92 nW⁄(cm2\*sr), respectively. Moreover, the current average monetary values of greenness and NTL are 3351.96 USD⁄% and 658.11 USD⁄nW⁄(cm2\*sr), respectively. The residential areas are far away from the abundant natural resources, which makes the main population desire more greenness in their living environments. Furthermore, high urban development density, represented by NTL, has caused adverse effects on human well-being in metropolitan areas. Therefore,  retaining a moderate development intensity is an effective way to achieve a sustainable society and improve human well-being.   
+The positive effects of greenness in living environments on human well-being are known. As a widely used proxy, the nighttime light (NTL) indicates the regional socio-economic status and development level. Higher development levels and economic status are related to more opportunity and higher income, but NTL also causes light pollution and other negative factors. However, the relationships between human well-being and greenness and NTL remains inconclusive. Here, we demonstrate the complex nexuses between subjective well-being (SWB) and greenness and NTL by employing the random forest method. We apply the Shapley additive explanations (SHAP) to estimate the contributions of greenness, NTL, and other features to SWB. Because SHAP is a completely local way and cannot provide a general explanation, building connections between feature values and their contributions is critical. We create a novel approach to connect them on a geographical ground. Although overall greenness is positively associated with SWB, while NTL is negatively linked, the relationships spatially vary. For example, on average, the monetary value of a 1% increase in greenness on overall life satisfaction (OVLS, an SWB indicator) is 120.94 (95%CI: 120.11 - 121.77) USD, while the monetary value of NTL on OVLS is  -833.96 (-956.85 - -711.08) USD/(nW⁄($cm^2$∙sr)). According to our results, greenness and NTL improvement should consider the local environments rather than simply formulating one-size-fits-all policies or strategies. To conclude,  retaining a moderate development intensity and greening based on the local status are necessary ways to achieve a sustainable society and improve human well-being.   
 
 ## Author  
 Chao Li, Shunsuke Managi  
-
-## Result: PALEF of NDVI, NTL, and income  
-![](04_Figure/10_pseudoFun_ALE.jpeg)  
     
-## Result: Monetary Values of NDVI  
-![](04_Figure/06_MRS.NDVI.jpg)  
+## Result: Monetary Values of NDVI (OVLS)    
+![](04_Figure/NDVI_mv_polygon_average_LSoverall.jpg)  
    
-## Result: Monetary Values of NTL  
-![](04_Figure/07_MRS.NTL.jpg)
+## Result: Monetary Values of NTL (OVLS)    
+![](04_Figure/NTL_mv_polygon_average_LSoverall.jpg)
   
 ## Maunscript  
 [**Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges**](05_Manuscript/Manuscript.pdf)  
   
 ## R Code  
 **[01_DW_DataWellBeingGreennessNTL_v1.R](02_RCode/01_DW_DataWellBeingGreennessNTL_v1.R)**: 
-This script creates the basic data set, with 24 features and 478,266 obvs.   
-**[03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R)**: this script is to 
-get random forest model.   
-**[04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R)**: this script 
-esitmates the PALEF and monetary values of the features of interest.   
-**[05_VI_AleplotNdviNtlRf_v1.R](02_RCode/05_VI_AleplotNdviNtlRf_v1.R)**: this script
-is about visualization.    
-**[06_AN_AleMsrGrid_v1.R](02_RCode/06_AN_AleMsrGrid_v1.R)**: this script is to calculate
-gridded monetary values.    
-**[08_VI_MrsAleGridRf_v1.R](02_RCode/08_VI_MrsAleGridRf_v1.R)**: this script is
-about visualization.
-**[SP_03_AN_LsNdviNtlRf_v1.R](02_RCode/SP_03_AN_LsNdviNtlRf_v1.R)**: High-performance 
-computer version of [03_AN_LsNdviNtlRf_v1.R](02_RCode/03_AN_LsNdviNtlRf_v1.R).     
-**[SP_04_AN_AleplotNdviNtlRf_v1.R](02_RCode/SP_04_AN_AleplotNdviNtlRf_v1.R)**: 
-High-performance computer version of [04_AN_AleplotNdviNtlRf_v1.R](02_RCode/04_AN_AleplotNdviNtlRf_v1.R).   
-**NOTE:** This repo DOES NOT include the survey, due to the rights and responsibility of 
-the this Github Owner.
+This script creates the basic data set, with 29 features and 478,266 obvs.   
+**NOTE:** This repo DOES NOT include the survey data, due to the rights and responsibility of 
+the this Github Owner.      
+
+## Py Code
+**[06_PyCode/01_AN_HyperparameterTuning_v0.py](06_PyCode/01_AN_HyperparameterTuning_v0.py)**: 
+This script is to select "max_feature" locally for all four SWB indicator.     
+ 
    
 ## Workflow
 **WF.A: 01 -> 03 -> 04 -> 05 -> 06 -> 08 -> END**   
