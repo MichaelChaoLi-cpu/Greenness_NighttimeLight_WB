@@ -186,6 +186,176 @@ def plotOverlapCoeff(Output_Variable, Output_Label, MESHPOLY):
                 dpi = 1000, bbox_inches='tight')
     return None
 
+def plotMvNdvi4Swb(MESHPOLY):
+    vmin = -250
+    vmax = 250
+    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(16, 16), dpi=1000)
+    Output_Variable = 'LSoverall'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[0, 0], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[0, 0], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=axs[0, 0], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[0,0].title.set_text("Monetary Value of NDVI (Output: OVLS)")
+    axs[0,0].grid(linestyle='dashed')
+    axs[0,0].set_xlim([126, 146])
+    axs[0,0].set_ylim([26,46])
+    axs[0,0].text(0.01, 0.99, "a", 
+              fontsize = 16, horizontalalignment = "left", transform=axs[0,0].transAxes,
+              ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'LSrelative'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[0, 1], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[0, 1], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=axs[0, 1], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[0,1].title.set_text("Monetary Value of NDVI (Output: RLS")
+    axs[0,1].grid(linestyle='dashed')
+    axs[0,1].set_xlim([126, 146])
+    axs[0,1].set_ylim([26,46])
+    axs[0,1].text(0.01, 0.99, "b", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[0,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'Happinessoverall'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[1, 0], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[1, 0], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=axs[1, 0], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[1,0].title.set_text("Monetary Value of NDVI (Output: OH)")
+    axs[1,0].grid(linestyle='dashed')
+    axs[1,0].set_xlim([126, 146])
+    axs[1,0].set_ylim([26,46])
+    axs[1,0].text(0.01, 0.99, "c", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,0].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'Happinessrelative'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[1, 1], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[1, 1], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=axs[1, 1], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[1,1].title.set_text("Monetary Value of NDVI (Output: RH)")
+    axs[1,1].grid(linestyle='dashed')
+    axs[1,1].set_xlim([126, 146])
+    axs[1,1].set_ylim([26,46])
+    axs[1,1].text(0.01, 0.99, "d", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NDVI_coef_merged.jpg",
+                dpi = 1000, bbox_inches='tight')
+    return None
+
+def plotMvNtl4Swb(MESHPOLY):
+    vmin = -1500
+    vmax = 1500
+    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(16, 16), dpi=1000)
+    Output_Variable = 'LSoverall'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[0, 0], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[0, 0], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=axs[0, 0], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[0,0].title.set_text("Monetary Value of NTL (Output: OVLS)")
+    axs[0,0].grid(linestyle='dashed')
+    axs[0,0].set_xlim([126, 146])
+    axs[0,0].set_ylim([26,46])
+    axs[0,0].text(0.01, 0.99, "a", 
+              fontsize = 16, horizontalalignment = "left", transform=axs[0,0].transAxes,
+              ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'LSrelative'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[0, 1], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[0, 1], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=axs[0, 1], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[0,1].title.set_text("Monetary Value of NTL (Output: RLS)")
+    axs[0,1].grid(linestyle='dashed')
+    axs[0,1].set_xlim([126, 146])
+    axs[0,1].set_ylim([26,46])
+    axs[0,1].text(0.01, 0.99, "b", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[0,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'Happinessoverall'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[1, 0], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[1, 0], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=axs[1, 0], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[1,0].title.set_text("Monetary Value of NTL (Output: OH)")
+    axs[1,0].grid(linestyle='dashed')
+    axs[1,0].set_xlim([126, 146])
+    axs[1,0].set_ylim([26,46])
+    axs[1,0].text(0.01, 0.99, "c", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,0].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    Output_Variable = 'Happinessrelative'
+    NDVI_Coef_Gdf = getGdf(Output_Variable, MESHPOLY)
+    ov_standard_dict = {"LSoverall":"OVLS", "LSrelative":"RLS",
+                        "Happinessoverall":"OH", "Happinessrelative":"RH"}
+    NDVI_Coef_Gdf['MV_NDVI'] = NDVI_Coef_Gdf['NDVI_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf['MV_NTL'] = NDVI_Coef_Gdf['NTL_coef'] / NDVI_Coef_Gdf['income_indiv_coef'] * 1000000 / 121.0458
+    NDVI_Coef_Gdf.replace([np.inf, -np.inf], np.nan, inplace=True)
+    JAPAN_PERFECTURE.plot(ax=axs[1, 1], color='#F6F6F6', alpha = 0.5)
+    JAPAN_PERFECTURE.boundary.plot(ax=axs[1, 1], edgecolor='black', alpha = 0.5, linewidth=0.1)
+    NDVI_Coef_Gdf.plot(column='MV_NTL', ax=axs[1, 1], legend=True, cmap=CMAP, 
+                       vmax = vmax, vmin = vmin)
+    axs[1,1].title.set_text("Monetary Value of NTL (Output: RH)")
+    axs[1,1].grid(linestyle='dashed')
+    axs[1,1].set_xlim([126, 146])
+    axs[1,1].set_ylim([26,46])
+    axs[1,1].text(0.01, 0.99, "d", 
+                  fontsize = 16, horizontalalignment = "left", transform=axs[1,1].transAxes,
+                  ha='left', va='top', fontweight='bold')
+    
+    plt.show();
+    fig.savefig(REPO_FIGURE_LOCATION + "NTL_mv_merged.jpg",
+                dpi = 1000, bbox_inches='tight')
+    return None
+
 Output_Variable = 'LSoverall'
 REPO_LOCATION, REPO_RESULT_LOCATION, REPO_FIGURE_LOCATION = runLocallyOrRemotely('y')
 CMAP = matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","green", "white", "yellow","red"])
@@ -198,6 +368,9 @@ plotOverlapCoeff('LSoverall', 'OVLS', MESHPOLY)
 plotOverlapCoeff('LSrelative', 'RLS', MESHPOLY)
 plotOverlapCoeff('Happinessoverall', 'OH', MESHPOLY)
 plotOverlapCoeff('Happinessrelative', 'RH', MESHPOLY)
+
+plotMvNdvi4Swb(MESHPOLY)
+plotMvNtl4Swb(MESHPOLY)
 
 """
 fig, ax = plt.subplots(figsize=(16, 16), dpi=300)
