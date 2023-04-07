@@ -220,7 +220,7 @@ def plotMvNdvi4Swb(MESHPOLY):
     JAPAN_PERFECTURE.boundary.plot(ax=axs[0, 1], edgecolor='black', alpha = 0.5, linewidth=0.1)
     NDVI_Coef_Gdf.plot(column='MV_NDVI', ax=axs[0, 1], legend=True, cmap=CMAP, 
                        vmax = vmax, vmin = vmin)
-    axs[0,1].title.set_text("Monetary Value of NDVI (Output: RLS")
+    axs[0,1].title.set_text("Monetary Value of NDVI (Output: RLS)")
     axs[0,1].grid(linestyle='dashed')
     axs[0,1].set_xlim([126, 146])
     axs[0,1].set_ylim([26,46])
@@ -267,7 +267,7 @@ def plotMvNdvi4Swb(MESHPOLY):
                   ha='left', va='top', fontweight='bold')
     
     plt.show();
-    fig.savefig(REPO_FIGURE_LOCATION + "NDVI_coef_merged.jpg",
+    fig.savefig(REPO_FIGURE_LOCATION + "NDVI_mv_merged.jpg",
                 dpi = 1000, bbox_inches='tight')
     return None
 
