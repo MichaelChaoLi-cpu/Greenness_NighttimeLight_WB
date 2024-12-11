@@ -1,11 +1,8 @@
 #!/bin/sh
 #PJM -L rscgrp=b-batch
-#PJM -L rscgrp=b-batch
 #PJM -L gpu=1
 #PJM -j
-#PJM -N my_rapids_job
-#PJM -o my_rapids_job.out
-#PJM -e my_rapids_job.err
+
 
 # Load your conda setup script (adjust the path as needed).
 # Typically: source ~/miniconda3/etc/profile.d/conda.sh
