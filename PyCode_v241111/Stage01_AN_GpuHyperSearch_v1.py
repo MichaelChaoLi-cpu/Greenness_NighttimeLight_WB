@@ -32,7 +32,7 @@ y = np.concatenate([y_train, y_test])
 rf_reg =RandomForestRegressor(n_bins=256)
 param_grid = {
     "n_estimators": list(range(1_000, 5_100, 200)),
-    "max_depth": [8, 16, 24, 32],
+    "max_depth": [8, 12, 16, 20, 24],
     "max_features": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
     "min_samples_split": [2, 4, 8, 16, 32],
     "max_samples": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
