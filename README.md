@@ -6,33 +6,17 @@ The positive effects of greenness in living environments on human well-being are
 ## Author  
 Chao Li, Shunsuke Managi  
     
-## Result: Monetary Values of NDVI (OVLS)    
+## Result: Monetary Values of NDVI    
 ![](04_Figure/NDVI_mv_polygon_average_LSoverall.jpg)  
    
-## Result: Monetary Values of NTL (OVLS)    
+## Result: Monetary Values of NTL    
 ![](04_Figure/NTL_mv_polygon_average_LSoverall.jpg)
   
 ## Maunscript  
-[**Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges**](05_Manuscript/Manuscript.pdf)  
-  
-## R Code  
-**[01_DW_DataWellBeingGreennessNTL_v1.R](02_RCode/01_DW_DataWellBeingGreennessNTL_v1.R)**: 
-This script creates the basic data set, with 29 features and 478,266 obvs.   
-**NOTE:** This repo DOES NOT include the survey data, due to the rights and responsibility of 
-the this Github Owner.      
+[**Greenness and Nighttime Light Positively Affect Human Well-being within Certain Ranges**](05_Manuscript/Manuscript.pdf)      
 
 ## Py Code
-**[06_PyCode/01_AN_HyperparameterTuning_v0.py](06_PyCode/01_AN_HyperparameterTuning_v0.py)**: 
-This script is to select "max_feature" locally for all four SWB indicator.     
- 
-   
-## Workflow
-**WF.A: 01 -> 03 -> 04 -> 05 -> 06 -> 08 -> END**   
-**WF.A.01.03**: This step get the random forest model.  
-**WF.A.03.04**: This step get ALEs, PALEFs, monetary values of features of interest.  
-**WF.A.04.05**: Visualization of ALEs, PALEFs, and monetary values.  
-**WF.A.05.06**: Get gridded average value of monetary values.  
-**WF.A.06.08**: Visualization of average value of monetary values.  
+**12_PyCode**    
    
 ## Contact Us:
 - Email: Prof. Shunsuke Managi <managi@doc.kyushu-u.ac.jp>  
