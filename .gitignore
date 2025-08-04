@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.ipynb_checkpoints/**
+.virtual_documents/**
 02_RCode/SpecialCode/
 03_Results/
 01_Data/01_data_ext.RData
@@ -17,6 +19,8 @@ gadm36_JPN_1_sp.rds
 07_PyResults/
 04_Figure/*/
 Results/*
+01_Data/**
+13_Results/**
 
 03_Results/**
 01_Data/*
