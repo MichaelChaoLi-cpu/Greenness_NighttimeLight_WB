@@ -6,10 +6,10 @@ The positive impact of greenness, represented by normalized difference vegetatio
 Chao Li, Shunsuke Managi  
     
 ## Result: Monetary Values of NDVI    
-![](04_Figure/Fig_CityLevelVariable_NDVI_refine_rev1.jpg)  
+![](04_Figure/Fig_CityLevelMWTP_MWPT_NDVI_refine_rev1.jpg)  
    
 ## Result: Monetary Values of NTL    
-![](04_Figure/Fig_CityLevelVariable_NTL_refine_rev1.jpg)
+![](04_Figure/Fig_CityLevelMWTP_MWPT_NTL_refine_rev1.jpg)
   
 ## Maunscript  
 [**A Spatial Machine Learning Approach to Valuing Development and Greenness in Well-Being**](05_Manuscript/DP15.pdf)      
